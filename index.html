@@ -67,15 +67,15 @@ body::before {
 #cursor-ring {
   position: fixed;
   width: 40px; height: 40px;
-  border: 1px solid rgba(138,108,62,0.4);
+  border: 1px solid rgba(138,108,62,0.35);
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
   transform: translate(-50%, -50%);
   transition: all 0.15s ease-out;
 }
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; background: var(--neon-purple); }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: var(--neon-purple); }
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; background: #b8956a; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: #b8956a; }
 
 /* ── NAVBAR ── */
 nav {
@@ -101,8 +101,8 @@ nav {
   text-decoration: none;
 }
 .nav-brand span {
-  color: var(--neon-cyan);
-  -webkit-text-fill-color: var(--neon-cyan);
+  color: #8a6c3e;
+  -webkit-text-fill-color: #8a6c3e;
   font-size: 0.7em;
   vertical-align: super;
 }
@@ -125,16 +125,16 @@ nav {
   position: absolute;
   bottom: -4px; left: 0; right: 0;
   height: 1px;
-  background: var(--neon-cyan);
+  background: #8a6c3e;
   transform: scaleX(0);
   transition: transform 0.3s;
 }
-.nav-links a:hover { color: var(--neon-cyan); }
+.nav-links a:hover { color: #8a6c3e; }
 .nav-links a:hover::after { transform: scaleX(1); }
 .nav-cta {
   background: transparent;
-  border: 1px solid var(--neon-cyan);
-  color: var(--neon-cyan);
+  border: 1px solid #8a6c3e;
+  color: #8a6c3e;
   padding: 0.5rem 1.4rem;
   font-family: 'Noto Sans TC', sans-serif;
   font-size: 0.85rem;
@@ -150,7 +150,7 @@ nav {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--neon-cyan);
+  background: #8a6c3e;
   transform: translateX(-100%);
   transition: transform 0.3s;
   z-index: -1;
@@ -196,11 +196,11 @@ nav {
   align-items: center;
   gap: 0.5rem;
   padding: 0.35rem 1rem;
-  border: 1px solid rgba(0,245,255,0.4);
+  border: 1px solid rgba(138,108,62,0.3);
   background: rgba(201,169,110,0.06);
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.75rem;
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   letter-spacing: 0.15em;
   margin-bottom: 1.5rem;
 }
@@ -226,7 +226,7 @@ nav {
   background: linear-gradient(90deg, #6b4f2a, #8a6c3e, #b8956a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(0,245,255,0.5));
+  filter: drop-shadow(0 0 20px rgba(138,108,62,0.2));
 }
 .hero-subtitle {
   font-family: 'Noto Sans TC', sans-serif;
@@ -235,7 +235,7 @@ nav {
   margin: 1.5rem 0 2.5rem;
   line-height: 1.8;
 }
-.hero-subtitle strong { color: var(--neon-cyan); font-weight: 500; }
+.hero-subtitle strong { color: #8a6c3e; font-weight: 500; }
 
 .hero-cta-group { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
 .btn-primary {
@@ -263,12 +263,12 @@ nav {
   opacity: 0;
   transition: opacity 0.3s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,245,255,0.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(138,108,62,0.2); }
 .btn-primary:hover::before { opacity: 1; }
 .btn-primary span { position: relative; z-index: 1; }
 .btn-secondary {
   padding: 0.9rem 2rem;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(138,108,62,0.2);
   color: var(--text-dim);
   font-family: 'Noto Sans TC', sans-serif;
   font-size: 0.9rem;
@@ -279,7 +279,7 @@ nav {
   gap: 0.5rem;
   transition: all 0.3s;
 }
-.btn-secondary:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+.btn-secondary:hover { border-color: #8a6c3e; color: #8a6c3e; }
 
 .hero-stats {
   display: flex;
@@ -287,16 +287,16 @@ nav {
   margin-top: 3rem;
 }
 .stat {
-  border-left: 2px solid var(--neon-cyan);
+  border-left: 2px solid #8a6c3e;
   padding-left: 1rem;
 }
 .stat-num {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   line-height: 1;
-  text-shadow: 0 0 20px rgba(0,245,255,0.6);
+  text-shadow: 0 0 20px rgba(138,108,62,0.2);
 }
 .stat-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem; }
 
@@ -366,6 +366,7 @@ nav {
   object-fit: contain;
   border-radius: 0;
   display: block;
+  mix-blend-mode: multiply;
 }
 
 /* 掃描線：細緻優雅 */
@@ -423,7 +424,7 @@ section { padding: 6rem 2rem; }
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.4em;
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
   display: flex;
@@ -434,7 +435,7 @@ section { padding: 6rem 2rem; }
   content: '';
   display: block;
   width: 40px; height: 1px;
-  background: var(--neon-cyan);
+  background: #8a6c3e;
 }
 .section-title {
   font-family: 'Cormorant Garamond', serif;
@@ -477,7 +478,7 @@ section { padding: 6rem 2rem; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(138,108,62,0.2) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -503,7 +504,7 @@ section { padding: 6rem 2rem; }
 
 .card-icon {
   width: 56px; height: 56px;
-  border: 1px solid rgba(0,245,255,0.3);
+  border: 1px solid rgba(138,108,62,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -514,17 +515,17 @@ section { padding: 6rem 2rem; }
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, var(--neon-cyan), transparent);
+  background: linear-gradient(135deg, #8a6c3e, transparent);
   opacity: 0.2;
 }
-.card-icon iconify-icon { font-size: 1.8rem; color: var(--neon-cyan); }
+.card-icon iconify-icon { font-size: 1.8rem; color: #8a6c3e; }
 .card-num {
   position: absolute;
   top: 1rem; right: 1.5rem;
   font-family: 'Cormorant Garamond', serif;
   font-size: 3rem;
   font-weight: 900;
-  color: rgba(0,245,255,0.06);
+  color: rgba(138,108,62,0.2);
   line-height: 1;
 }
 .card-title {
@@ -551,8 +552,8 @@ section { padding: 6rem 2rem; }
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.1em;
-  border: 1px solid rgba(0,245,255,0.2);
-  color: var(--neon-cyan);
+  border: 1px solid rgba(138,108,62,0.2);
+  color: #8a6c3e;
   background: rgba(201,169,110,0.06);
 }
 
@@ -594,7 +595,7 @@ section { padding: 6rem 2rem; }
   position: absolute;
   left: 0; top: 0; bottom: 0;
   width: 0;
-  background: var(--neon-cyan);
+  background: #8a6c3e;
   opacity: 0.08;
   transition: width 0.4s;
 }
@@ -610,7 +611,7 @@ section { padding: 6rem 2rem; }
 }
 .spec-key::before {
   content: '▸';
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   font-size: 0.7rem;
 }
 .spec-val {
@@ -625,14 +626,14 @@ section { padding: 6rem 2rem; }
   align-items: flex-start;
   gap: 1rem;
   padding: 1.2rem;
-  border: 1px solid rgba(0,245,255,0.1);
+  border: 1px solid rgba(138,108,62,0.2);
   background: rgba(255,252,248,0.8);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 12px rgba(138,108,62,0.06);
   transition: all 0.3s;
 }
 .benefit-row:hover {
-  border-color: rgba(0,245,255,0.3);
+  border-color: rgba(138,108,62,0.2);
   background: rgba(201,169,110,0.06);
   transform: translateX(6px);
 }
@@ -642,10 +643,10 @@ section { padding: 6rem 2rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,245,255,0.1);
-  border: 1px solid rgba(0,245,255,0.2);
+  background: rgba(138,108,62,0.08);
+  border: 1px solid rgba(138,108,62,0.2);
 }
-.benefit-icon iconify-icon { font-size: 1.2rem; color: var(--neon-cyan); }
+.benefit-icon iconify-icon { font-size: 1.2rem; color: #8a6c3e; }
 .benefit-text h4 {
   font-size: 0.95rem;
   font-weight: 600;
@@ -669,7 +670,7 @@ section { padding: 6rem 2rem; }
 .case-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(0,245,255,0.1);
+  border: 1px solid rgba(138,108,62,0.2);
   background: rgba(255,252,248,0.95);
   backdrop-filter: blur(20px);
   padding: 0;
@@ -678,7 +679,7 @@ section { padding: 6rem 2rem; }
 }
 .case-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(0,245,255,0.3);
+  border-color: rgba(138,108,62,0.2);
 }
 .case-img {
   width: 100%;
@@ -702,9 +703,9 @@ section { padding: 6rem 2rem; }
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.7rem;
   letter-spacing: 0.15em;
-  background: rgba(0,245,255,0.15);
-  border: 1px solid var(--neon-cyan);
-  color: var(--neon-cyan);
+  background: rgba(138,108,62,0.2);
+  border: 1px solid #8a6c3e;
+  color: #8a6c3e;
 }
 .case-content { padding: 1.5rem; }
 .case-title {
@@ -790,7 +791,7 @@ section { padding: 6rem 2rem; }
   font-weight: 500;
   transition: color 0.3s;
 }
-.contact-item a:hover { color: var(--neon-cyan); }
+.contact-item a:hover { color: #8a6c3e; }
 
 .big-cta {
   display: inline-flex;
@@ -812,13 +813,13 @@ section { padding: 6rem 2rem; }
 }
 .big-cta:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(0,245,255,0.4);
+  box-shadow: 0 20px 60px rgba(138,108,62,0.2);
 }
 .big-cta::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #fff, var(--neon-cyan));
+  background: linear-gradient(135deg, #fff, #8a6c3e);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -857,9 +858,9 @@ footer {
 .footer-cert {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.7rem;
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   letter-spacing: 0.1em;
-  border: 1px solid rgba(0,245,255,0.2);
+  border: 1px solid rgba(138,108,62,0.2);
   padding: 0.3rem 0.75rem;
 }
 
@@ -867,7 +868,7 @@ footer {
 .divider {
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  background: linear-gradient(90deg, transparent, #8a6c3e, transparent);
   opacity: 0.3;
 }
 
@@ -903,7 +904,7 @@ footer {
   color: var(--text-dim);
   text-transform: uppercase;
 }
-.dm-label iconify-icon { font-size: 1rem; color: var(--neon-cyan); }
+.dm-label iconify-icon { font-size: 1rem; color: #8a6c3e; }
 .dm-buttons {
   display: flex;
   gap: 1rem;
@@ -915,9 +916,9 @@ footer {
   align-items: center;
   gap: 0.6rem;
   padding: 0.7rem 1.5rem;
-  border: 1px solid rgba(0,245,255,0.35);
+  border: 1px solid rgba(138,108,62,0.3);
   background: rgba(201,169,110,0.06);
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   font-family: 'Noto Sans TC', sans-serif;
   font-size: 0.88rem;
   text-decoration: none;
@@ -931,13 +932,13 @@ footer {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0,245,255,0.15), transparent);
+  background: linear-gradient(135deg, rgba(138,108,62,0.2), transparent);
   opacity: 0;
   transition: opacity 0.3s;
 }
 .dm-btn:hover {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 20px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.05);
+  border-color: #8a6c3e;
+  box-shadow: 0 0 20px rgba(138,108,62,0.2), inset 0 0 20px rgba(138,108,62,0.2);
   transform: translateY(-2px);
 }
 .dm-btn:hover::before { opacity: 1; }
@@ -959,7 +960,7 @@ footer {
   gap: 1.2rem;
   align-items: flex-start;
   padding: 1.2rem 0;
-  border-bottom: 1px solid rgba(0,245,255,0.07);
+  border-bottom: 1px solid rgba(138,108,62,0.2);
   transition: background 0.3s;
   position: relative;
 }
@@ -969,7 +970,7 @@ footer {
   position: absolute;
   left: -1rem; top: 0; bottom: 0;
   width: 2px;
-  background: var(--neon-cyan);
+  background: #8a6c3e;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -980,10 +981,10 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(0,245,255,0.25);
-  background: rgba(0,245,255,0.06);
+  border: 1px solid rgba(138,108,62,0.2);
+  background: rgba(138,108,62,0.2);
 }
-.why-icon iconify-icon { font-size: 1.2rem; color: var(--neon-cyan); }
+.why-icon iconify-icon { font-size: 1.2rem; color: #8a6c3e; }
 .why-title {
   font-size: 0.95rem;
   font-weight: 600;
@@ -1002,16 +1003,16 @@ footer {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.2em;
-  color: var(--neon-cyan);
+  color: #8a6c3e;
   text-transform: uppercase;
 }
 .video-label iconify-icon { font-size: 1.1rem; }
 .video-wrapper {
   position: relative;
   aspect-ratio: 16/9;
-  border: 1px solid rgba(0,245,255,0.2);
+  border: 1px solid rgba(138,108,62,0.2);
   overflow: hidden;
-  background: #000;
+  background: #f5f0e8;
 }
 .video-wrapper iframe {
   position: absolute;
@@ -1025,10 +1026,10 @@ footer {
   z-index: 2;
   pointer-events: none;
 }
-.vc-tl { top: -1px; left: -1px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-.vc-tr { top: -1px; right: -1px; border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
-.vc-bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-.vc-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+.vc-tl { top: -1px; left: -1px; border-top: 2px solid #8a6c3e; border-left: 2px solid #8a6c3e; }
+.vc-tr { top: -1px; right: -1px; border-top: 2px solid #8a6c3e; border-right: 2px solid #8a6c3e; }
+.vc-bl { bottom: -1px; left: -1px; border-bottom: 2px solid #8a6c3e; border-left: 2px solid #8a6c3e; }
+.vc-br { bottom: -1px; right: -1px; border-bottom: 2px solid #8a6c3e; border-right: 2px solid #8a6c3e; }
 .video-caption {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.7rem;
@@ -1221,7 +1222,7 @@ footer {
           <div class="spec-item"><span class="spec-key">鏡頭四</span><span class="spec-val">200x 偏振光（自動變焦）</span></div>
           <div class="spec-item"><span class="spec-key">連接方式</span><span class="spec-val">WiFi 無線傳輸</span></div>
           <div class="spec-item"><span class="spec-key">兼容平台</span><span class="spec-val">手機 / 平板 iOS & Android</span></div>
-          <div class="spec-item"><span class="spec-key">月租費用</span><span class="spec-val" style="color:var(--neon-green);">NT$ 0 ／零費用</span></div>
+          <div class="spec-item"><span class="spec-key">月租費用</span><span class="spec-val" style="color:#5a7a5a;">NT$ 0 ／零費用</span></div>
           <div class="spec-item"><span class="spec-key">認證</span><span class="spec-val">NCC 國家通訊傳播委員會</span></div>
           <div class="spec-item"><span class="spec-key">原產地</span><span class="spec-val">韓國 ARAM HUVIS 原裝</span></div>
           <div class="spec-item"><span class="spec-key">台灣總代理</span><span class="spec-val">蓓薇媞 / 林先生 0932888077</span></div>
