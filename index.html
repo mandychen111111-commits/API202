@@ -3,1315 +3,566 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 頭皮智能分析儀 — 韓國原裝 3D 顯微科技</title>
+<title>API 頭皮智能分析儀 — 韓國原裝 ARAM HUVIS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 <style>
-:root {
-  --bg: #ffffff;
-  --bg2: #f0f4f8;
-  --neon-cyan: #1a4a6e;
-  --neon-blue: #0f3254;
-  --neon-purple: #2d6a9f;
-  --neon-green: #3a8a6e;
-  --text: #0d2136;
-  --text-dim: #4a6880;
-  --card-bg: rgba(255, 255, 255, 0.92);
-  --border-glow: rgba(26, 74, 110, 0.2);
+/* ── TOKENS ── */
+:root{
+  --navy:#1a4a6e; --navy-d:#0f3254; --navy-m:#2d6a9f; --navy-l:#e8f2fb;
+  --white:#ffffff; --bg:#f7fbff; --bg2:#eef5fc;
+  --text:#0d2136; --text-m:#3a5570; --text-d:#7a9ab5;
+  --border:rgba(26,74,110,0.12);
+  --sh-s:0 2px 12px rgba(26,74,110,0.07);
+  --sh-m:0 8px 32px rgba(26,74,110,0.11);
+  --sh-l:0 20px 60px rgba(26,74,110,0.14);
+  --r:12px; --rs:6px;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Noto Sans TC', sans-serif;
-  overflow-x: hidden;
-  cursor: none;
-  background-image: 
-    radial-gradient(ellipse at 20% 0%, rgba(26,74,110,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 100%, rgba(45,106,159,0.03) 0%, transparent 50%);
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 6%;
+  background:rgba(255,255,255,0.93);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);box-shadow:var(--sh-s);
+  transition:box-shadow .3s;
 }
-
-/* ── NOISE TEXTURE ── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.15;
+nav.scrolled{box-shadow:var(--sh-m);}
+.nav-brand{
+  display:flex;flex-direction:column;
+  font-family:'Josefin Sans',sans-serif;font-weight:600;font-size:1.3rem;
+  letter-spacing:.12em;color:var(--navy);text-decoration:none;
 }
-
-/* ── CUSTOM CURSOR ── */
-#cursor {
-  position: fixed;
-  width: 12px; height: 12px;
-  background: #1a4a6e;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
-  box-shadow: 0 0 12px rgba(26,74,110,0.6);
-  mix-blend-mode: screen;
+.nav-sub{font-size:.52rem;letter-spacing:.16em;color:var(--text-d);font-weight:300;margin-top:1px;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;align-items:center;}
+.nav-links a{
+  font-size:.84rem;letter-spacing:.04em;color:var(--text-m);text-decoration:none;
+  font-weight:400;transition:color .25s;position:relative;padding-bottom:2px;
 }
-#cursor-ring {
-  position: fixed;
-  width: 40px; height: 40px;
-  border: 1px solid rgba(26,74,110,0.35);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: all 0.15s ease-out;
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;height:1.5px;
+  background:var(--navy);transform:scaleX(0);transition:transform .3s;transform-origin:left;
 }
-body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; background: #2d6a9f; }
-body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: #2d6a9f; }
-
-/* ── NAVBAR ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(26, 74, 110, 0.12);
+.nav-links a:hover{color:var(--navy);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-cta{
+  background:var(--navy)!important;color:var(--white)!important;
+  padding:.48rem 1.4rem!important;border-radius:2px;
+  transition:background .25s,transform .2s!important;
 }
-.nav-brand {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 900;
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  background: linear-gradient(135deg, #2d6a9f, #8a6030);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-decoration: none;
-}
-.nav-brand span {
-  color: #1a4a6e;
-  -webkit-text-fill-color: #1a4a6e;
-  font-size: 0.7em;
-  vertical-align: super;
-}
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  align-items: center;
-}
-.nav-links a {
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  transition: color 0.3s;
-  position: relative;
-}
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px; left: 0; right: 0;
-  height: 1px;
-  background: #1a4a6e;
-  transform: scaleX(0);
-  transition: transform 0.3s;
-}
-.nav-links a:hover { color: #1a4a6e; }
-.nav-links a:hover::after { transform: scaleX(1); }
-.nav-cta {
-  background: transparent;
-  border: 1px solid #1a4a6e;
-  color: #1a4a6e;
-  padding: 0.5rem 1.4rem;
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  cursor: none;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.3s;
-  text-decoration: none;
-  display: inline-block;
-}
-.nav-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #1a4a6e;
-  transform: translateX(-100%);
-  transition: transform 0.3s;
-  z-index: -1;
-}
-.nav-cta:hover { color: var(--bg); }
-.nav-cta:hover::before { transform: translateX(0); }
+.nav-cta::after{display:none!important;}
+.nav-cta:hover{background:var(--navy-d)!important;transform:translateY(-1px);}
 
 /* ── HERO ── */
-#hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  background: linear-gradient(160deg, #ffffff 0%, #e8f0f8 50%, #ddeaf6 100%);
+#hero{
+  min-height:100vh;display:flex;align-items:center;
+  position:relative;overflow:hidden;padding-top:68px;
+  background:linear-gradient(148deg,#ffffff 0%,#eef5fc 55%,#d6e8f7 100%);
+}
+.hero-svg-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.hero-svg-bg svg{width:100%;height:100%;position:absolute;inset:0;}
+
+/* SVG element animations */
+.w1{animation:wv1 14s ease-in-out infinite;}
+.w2{animation:wv2 18s ease-in-out infinite;}
+.w3{animation:wv1 22s ease-in-out infinite reverse;}
+.w4{animation:wv2 16s ease-in-out infinite reverse;}
+.w5{animation:wv1 20s ease-in-out infinite;}
+@keyframes wv1{0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+@keyframes wv2{0%,100%{transform:translateY(0) translateX(0);}33%{transform:translateY(-14px) translateX(8px);}66%{transform:translateY(10px) translateX(-5px);}}
+.c1{animation:cf1 9s ease-in-out infinite;}
+.c2{animation:cf2 12s ease-in-out infinite;}
+.c3{animation:cf1 15s ease-in-out infinite reverse;}
+.c4{animation:cf2 10s ease-in-out infinite;}
+.c5{animation:cf1 13s ease-in-out infinite;}
+@keyframes cf1{0%,100%{transform:translateY(0);opacity:1;}50%{transform:translateY(-14px);opacity:.75;}}
+@keyframes cf2{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.h1{animation:sp1 30s linear infinite;transform-box:fill-box;transform-origin:center;}
+.h2{animation:sp1 45s linear infinite reverse;transform-box:fill-box;transform-origin:center;}
+@keyframes sp1{to{transform:rotate(360deg);}}
+
+.hero-fade{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to right,rgba(255,255,255,.72) 0%,rgba(255,255,255,.28) 44%,transparent 62%);
+}
+.hero-content{
+  position:relative;z-index:2;max-width:1200px;margin:0 auto;
+  padding:4rem 6% 4rem;display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:center;width:100%;
 }
 
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 60% 50%, rgba(26,74,110,0.08) 0%, transparent 60%),
-              radial-gradient(ellipse at 20% 80%, rgba(45,106,159,0.05) 0%, transparent 50%),
-              linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, rgba(232,240,248,0.4) 100%);
-  z-index: 1;
+/* badge */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.3rem 1rem .3rem .6rem;
+  background:var(--navy-l);border:1px solid rgba(26,74,110,.2);border-radius:100px;
+  font-family:'Josefin Sans',sans-serif;font-size:.68rem;letter-spacing:.12em;
+  color:var(--navy);margin-bottom:1.8rem;
 }
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 8rem 2rem 4rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+.bdot{
+  width:7px;height:7px;background:#3a8a6e;border-radius:50%;
+  animation:bdot 2s ease-in-out infinite;
 }
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 1rem;
-  border: 1px solid rgba(26,74,110,0.3);
-  background: rgba(26,74,110,0.06);
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.75rem;
-  color: #1a4a6e;
-  letter-spacing: 0.15em;
-  margin-bottom: 1.5rem;
-}
-.badge-dot {
-  width: 5px; height: 5px;
-  background: #b8c9b0;
-  border-radius: 50%;
-  animation: blink 1.5s infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+@keyframes bdot{0%,100%{box-shadow:0 0 0 0 rgba(58,138,110,.4);}50%{box-shadow:0 0 0 5px rgba(58,138,110,0);}}
 
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
+/* hero title */
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,5vw,4.4rem);font-weight:600;line-height:1.1;
+  margin-bottom:1.4rem;color:var(--text);
 }
-.title-line1 { display: block; color: var(--text); }
-.title-line2 {
-  display: block;
-  background: linear-gradient(90deg, #0f3254, #1a4a6e, #2d6a9f);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(26,74,110,0.2));
+.hero-title em{font-style:italic;color:var(--navy);}
+.hero-title .hl{
+  display:block;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-m) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.hero-subtitle {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  color: var(--text-dim);
-  margin: 1.5rem 0 2.5rem;
-  line-height: 1.8;
+.hero-sub{
+  font-size:.98rem;line-height:1.88;color:var(--text-m);
+  margin-bottom:2.4rem;max-width:440px;
 }
-.hero-subtitle strong { color: #1a4a6e; font-weight: 500; }
+.hero-sub strong{color:var(--navy);font-weight:600;}
 
-.hero-cta-group { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-.btn-primary {
-  position: relative;
-  padding: 0.9rem 2.5rem;
-  background: linear-gradient(135deg, #2d6a9f, #8a6030);
-  color: var(--bg);
-  font-family: 'Noto Sans TC', sans-serif;
-  font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: 0.1em;
-  border: none;
-  cursor: none;
-  text-decoration: none;
-  display: inline-block;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-  clip-path: none; border-radius: 0;
+/* cta group */
+.hctas{display:flex;gap:1rem;align-items:center;margin-bottom:2.8rem;flex-wrap:wrap;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 2.2rem;background:var(--navy);color:var(--white);
+  font-size:.9rem;font-weight:500;letter-spacing:.08em;text-decoration:none;
+  border-radius:var(--rs);transition:background .25s,transform .2s,box-shadow .25s;
+  box-shadow:0 4px 18px rgba(26,74,110,.3);
 }
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #e8d5b7, #2d6a9f);
-  opacity: 0;
-  transition: opacity 0.3s;
+.btn-primary:hover{background:var(--navy-d);transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,74,110,.38);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 1.8rem;border:1.5px solid var(--border);color:var(--text-m);
+  font-size:.88rem;letter-spacing:.05em;text-decoration:none;border-radius:var(--rs);
+  transition:all .25s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(26,74,110,0.2); }
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary span { position: relative; z-index: 1; }
-.btn-secondary {
-  padding: 0.9rem 2rem;
-  border: 1px solid rgba(26,74,110,0.2);
-  color: var(--text-dim);
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.9rem;
-  cursor: none;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s;
-}
-.btn-secondary:hover { border-color: #1a4a6e; color: #1a4a6e; }
+.btn-ghost:hover{border-color:var(--navy);color:var(--navy);}
 
-.hero-stats {
-  display: flex;
-  gap: 2rem;
-  margin-top: 3rem;
+/* stats bar */
+.hstats{
+  display:flex;border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);
+  box-shadow:var(--sh-s);
 }
-.stat {
-  border-left: 2px solid #1a4a6e;
-  padding-left: 1rem;
+.hstat{flex:1;padding:1.1rem 1rem;text-align:center;border-right:1px solid var(--border);}
+.hstat:last-child{border-right:none;}
+.hstat-n{
+  font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;
+  color:var(--navy);line-height:1;
 }
-.stat-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1a4a6e;
-  line-height: 1;
-  text-shadow: 0 0 20px rgba(26,74,110,0.2);
-}
-.stat-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem; }
+.hstat-l{font-size:.67rem;color:var(--text-d);margin-top:.3rem;letter-spacing:.05em;}
 
-/* Hero Image Card */
-.hero-visual {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+/* device */
+.hero-visual{display:flex;justify-content:center;align-items:center;position:relative;}
+.dev-wrap{
+  position:relative;width:100%;max-width:430px;
+  animation:devf 6s ease-in-out infinite;
 }
+@keyframes devf{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
+.dev-glow{
+  position:absolute;bottom:-18px;left:12%;right:12%;height:55px;
+  background:radial-gradient(ellipse,rgba(26,74,110,.22) 0%,transparent 70%);
+  filter:blur(14px);z-index:0;
+  animation:gwp 6s ease-in-out infinite;
+}
+@keyframes gwp{0%,100%{opacity:.6;transform:scaleX(1);}50%{opacity:1;transform:scaleX(1.1);}}
+.dev-img{position:relative;z-index:2;}
+.dev-img img{
+  width:100%;display:block;
+  mix-blend-mode:multiply;
+  filter:drop-shadow(0 20px 40px rgba(26,74,110,.2));
+}
+/* pills */
+.pill{
+  position:absolute;
+  background:rgba(255,255,255,.96);border:1px solid var(--border);
+  border-left:3px solid var(--navy);
+  padding:.45rem .9rem;border-radius:0 var(--rs) var(--rs) 0;
+  box-shadow:var(--sh-m);font-family:'Josefin Sans',sans-serif;
+  font-size:.63rem;letter-spacing:.1em;color:var(--text);z-index:5;
+  backdrop-filter:blur(8px);
+}
+.pill span{display:block;font-size:.56rem;color:var(--navy);margin-top:2px;font-weight:600;}
+.p1{top:14%;right:-8px;animation:pf 5s ease-in-out infinite;}
+.p2{top:50%;left:-8px;animation:pf 5s ease-in-out infinite 1.7s;}
+.p3{bottom:18%;right:-8px;animation:pf 5s ease-in-out infinite 3.3s;}
+@keyframes pf{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
 
-/* ── 流線感裝置區 ── */
-.device-frame {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  animation: device-float 5s ease-in-out infinite;
+/* ── SHARED SECTION ── */
+section{padding:6rem 6%;}
+.inner{max-width:1200px;margin:0 auto;}
+.sec-label{
+  font-family:'Josefin Sans',sans-serif;font-size:.68rem;letter-spacing:.35em;
+  color:var(--navy-m);text-transform:uppercase;
+  display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;
 }
-@keyframes device-float {
-  0%,100% { transform: translateY(0px); }
-  50%      { transform: translateY(-14px); }
+.sec-label::before{content:'';width:30px;height:1.5px;background:var(--navy-m);flex-shrink:0;}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.2vw,2.9rem);
+  font-weight:600;line-height:1.2;color:var(--text);margin-bottom:1rem;
 }
+.sec-title span{color:var(--navy);}
+.sec-desc{font-size:.97rem;line-height:1.85;color:var(--text-m);max-width:540px;}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s;}
+.reveal.in{opacity:1;transform:translateY(0);}
 
-/* 大光暈底座 */
-.device-glow {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160%;
-  height: 120px;
-  background: radial-gradient(ellipse, rgba(26,74,110,0.25) 0%, rgba(45,106,159,0.08) 40%, transparent 70%);
-  filter: blur(18px);
-  animation: pulse-glow 4s ease-in-out infinite;
-  z-index: 0;
-  border-radius: 50%;
+/* ── FEATURES ── */
+#features{background:var(--white);}
+.feat-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;gap:2rem;flex-wrap:wrap;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.feat-card{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r);
+  padding:2rem;position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
 }
-/* 側面氛圍光 */
-.device-frame::before {
-  content: '';
-  position: absolute;
-  inset: -20px;
-  background: radial-gradient(ellipse at 50% 40%, rgba(26,74,110,0.12) 0%, transparent 65%);
-  filter: blur(12px);
-  z-index: 0;
-  pointer-events: none;
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--navy),var(--navy-m));
+  transform:scaleX(0);transition:transform .35s;transform-origin:left;
 }
-@keyframes pulse-glow {
-  0%,100%{ opacity: 0.7; }
-  50%{ opacity: 1; }
+.feat-card:hover{transform:translateY(-5px);box-shadow:var(--sh-l);border-color:rgba(26,74,110,.2);}
+.feat-card:hover::before{transform:scaleX(1);}
+.feat-n{
+  font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;
+  color:rgba(26,74,110,.06);line-height:1;position:absolute;top:1rem;right:1.5rem;
 }
-
-/* 產品圖：完全去框，純浮空 */
-.device-img {
-  position: relative;
-  z-index: 2;
-  background: transparent;
-  border: none;
-  padding: 0;
-  filter: drop-shadow(0 30px 50px rgba(26,74,110,0.25))
-          drop-shadow(0 10px 20px rgba(26,74,110,0.15));
+.feat-ico{
+  width:46px;height:46px;background:var(--navy-l);border-radius:var(--rs);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;
 }
-.device-img img {
-  width: 100%;
-  max-height: 600px;
-  object-fit: contain;
-  border-radius: 0;
-  display: block;
-  mix-blend-mode: multiply;
-}
-
-/* 掃描線：細緻優雅 */
-.scan-line {
-  position: absolute;
-  left: 10%; right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(45,106,159,0.7), transparent);
-  animation: scan 4s ease-in-out infinite;
-  z-index: 3;
-  top: 0;
-  box-shadow: 0 0 6px rgba(45,106,159,0.5);
-  opacity: 0.6;
-}
-@keyframes scan { 0%{top:5%} 100%{top:95%} }
-
-/* corner 移除（不需要科技感框線）*/
-.corner { display: none; }
-
-/* 浮動標籤：改成醫美質感小膠囊 */
-.floating-tag {
-  position: absolute;
-  background: rgba(255,252,248,0.92);
-  border: 1px solid rgba(26,74,110,0.2);
-  border-left: 3px solid #1a4a6e;
-  padding: 0.45rem 0.85rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.65rem;
-  color: #0d2136;
-  letter-spacing: 0.08em;
-  backdrop-filter: blur(12px);
-  z-index: 5;
-  box-shadow: 0 4px 16px rgba(26,74,110,0.12);
-  border-radius: 0 4px 4px 0;
-  animation: float 4s ease-in-out infinite;
-}
-.floating-tag > div:last-child {
-  font-size: 0.58rem;
-  margin-top: 2px;
-  color: #1a4a6e;
-  font-weight: 600;
-}
-.tag-1 { top: 18%; right: -100px; animation-delay: 0s; }
-.tag-2 { bottom: 30%; left: -105px; animation-delay: 1.5s; }
-.tag-3 { top: 58%; right: -100px; animation-delay: 0.8s; }
-@keyframes float {
-  0%,100%{ transform: translateY(0); }
-  50%{ transform: translateY(-8px); }
-}
-
-/* ── SECTION COMMON ── */
-section { padding: 6rem 2rem; }
-.section-inner { max-width: 1200px; margin: 0 auto; }
-.section-label {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.4em;
-  color: #1a4a6e;
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.section-label::before {
-  content: '';
-  display: block;
-  width: 40px; height: 1px;
-  background: #1a4a6e;
-}
-.section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 3.5vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-.section-title .hl {
-  background: linear-gradient(90deg, #2d6a9f, #e8d5b7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.section-desc {
-  color: var(--text-dim);
-  font-size: 1rem;
-  line-height: 1.8;
-  max-width: 600px;
-}
-
-/* ── FEATURES / VALUE PROPS ── */
-#features { background: #f0f4f8; }
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 4rem;
-}
-.feature-card {
-  position: relative;
-  background: rgba(255,252,248,0.9);
-  border: 1px solid rgba(26,74,110,0.15);
-  padding: 2rem;
-  backdrop-filter: blur(20px);
-  overflow: hidden;
-  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-  box-shadow: 0 2px 20px rgba(26,74,110,0.06);
-}
-.feature-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(26,74,110,0.2) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.feature-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(26,74,110,0.4);
-  box-shadow: 0 20px 60px rgba(26,74,110,0.12), 0 0 0 1px rgba(26,74,110,0.08);
-}
-.feature-card:hover::before { opacity: 1; }
-
-/* border beam animation */
-.feature-card::after {
-  content: '';
-  position: absolute;
-  top: -2px; left: -200%;
-  width: 100%; height: 2px;
-  background: linear-gradient(90deg, transparent, #2d6a9f, transparent);
-  animation: beam 4s linear infinite;
-}
-@keyframes beam { to { left: 200%; } }
-.feature-card:nth-child(2)::after { animation-delay: 1.3s; }
-.feature-card:nth-child(3)::after { animation-delay: 2.6s; }
-
-.card-icon {
-  width: 56px; height: 56px;
-  border: 1px solid rgba(26,74,110,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-.card-icon::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  background: linear-gradient(135deg, #1a4a6e, transparent);
-  opacity: 0.2;
-}
-.card-icon iconify-icon { font-size: 1.8rem; color: #1a4a6e; }
-.card-num {
-  position: absolute;
-  top: 1rem; right: 1.5rem;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 3rem;
-  font-weight: 900;
-  color: rgba(26,74,110,0.2);
-  line-height: 1;
-}
-.card-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.05em;
-}
-.card-desc {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-.tag {
-  padding: 0.2rem 0.6rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  border: 1px solid rgba(26,74,110,0.2);
-  color: #1a4a6e;
-  background: rgba(26,74,110,0.06);
+.feat-ico iconify-icon{font-size:1.4rem;color:var(--navy);}
+.feat-t{font-size:.98rem;font-weight:600;color:var(--text);margin-bottom:.55rem;}
+.feat-d{font-size:.85rem;color:var(--text-m);line-height:1.75;}
+.feat-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.1rem;}
+.ftag{
+  padding:.2rem .65rem;background:var(--navy-l);color:var(--navy);
+  font-size:.63rem;letter-spacing:.08em;border-radius:100px;
+  font-family:'Josefin Sans',sans-serif;
 }
 
 /* ── SPECS ── */
-#specs {
-  background: #ffffff;
-  position: relative;
-  overflow: hidden;
+#specs{background:var(--bg2);}
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3.5rem;align-items:start;}
+.spec-tbl{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white);}
+.spec-row{
+  display:grid;grid-template-columns:1fr 1.2fr;
+  padding:.95rem 1.4rem;border-bottom:1px solid var(--border);transition:background .2s;
 }
-#specs::before {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 800px; height: 800px;
-  background: radial-gradient(circle, rgba(26,74,110,0.05) 0%, transparent 70%);
-  pointer-events: none;
+.spec-row:last-child{border-bottom:none;}
+.spec-row:hover{background:var(--bg);}
+.spec-k{
+  font-family:'Josefin Sans',sans-serif;font-size:.73rem;letter-spacing:.07em;
+  color:var(--text-d);display:flex;align-items:center;gap:.5rem;
 }
-.specs-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-  margin-top: 4rem;
+.spec-k::before{content:'▸';color:var(--navy);font-size:.58rem;}
+.spec-v{font-size:.86rem;color:var(--text);font-weight:500;}
+.spec-v.hi{color:var(--navy);font-weight:700;}
+.ben-list{display:flex;flex-direction:column;gap:1rem;}
+.ben-item{
+  display:flex;gap:1rem;align-items:flex-start;padding:1.2rem;
+  background:var(--white);border:1px solid var(--border);border-radius:var(--r);
+  transition:all .25s;
 }
-.spec-list { display: flex; flex-direction: column; gap: 0; }
-.spec-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s;
+.ben-item:hover{border-color:rgba(26,74,110,.25);box-shadow:var(--sh-s);transform:translateX(4px);}
+.ben-ico{
+  width:38px;height:38px;flex-shrink:0;background:var(--navy-l);
+  border-radius:var(--rs);display:flex;align-items:center;justify-content:center;
 }
-.spec-item:hover { background: rgba(26,74,110,0.04); }
-.spec-item::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 0;
-  background: #1a4a6e;
-  opacity: 0.08;
-  transition: width 0.4s;
+.ben-ico iconify-icon{font-size:1.1rem;color:var(--navy);}
+.ben-t{font-size:.9rem;font-weight:600;margin-bottom:.25rem;}
+.ben-d{font-size:.81rem;color:var(--text-m);line-height:1.72;}
+
+/* ── WHY ── */
+#why{background:var(--white);}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3.5rem;align-items:start;}
+.why-list{display:flex;flex-direction:column;}
+.why-item{display:flex;gap:1.1rem;padding:1.25rem 0;border-bottom:1px solid var(--border);}
+.why-item:last-child{border-bottom:none;}
+.why-ico{
+  width:37px;height:37px;flex-shrink:0;background:var(--navy-l);
+  border-radius:var(--rs);display:flex;align-items:center;justify-content:center;margin-top:2px;
 }
-.spec-item:hover::before { width: 100%; }
-.spec-key {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.why-ico iconify-icon{font-size:1.05rem;color:var(--navy);}
+.why-t{font-size:.91rem;font-weight:600;margin-bottom:.28rem;}
+.why-d{font-size:.82rem;color:var(--text-m);line-height:1.72;}
+.vid-col{position:sticky;top:88px;}
+.vid-label{
+  font-family:'Josefin Sans',sans-serif;font-size:.68rem;letter-spacing:.2em;
+  color:var(--navy);text-transform:uppercase;
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;
 }
-.spec-key::before {
-  content: '▸';
-  color: #1a4a6e;
-  font-size: 0.7rem;
+.vid-label iconify-icon{font-size:1rem;}
+.vid-box{
+  border-radius:var(--r);overflow:hidden;aspect-ratio:16/9;
+  box-shadow:var(--sh-l);border:1px solid var(--border);
 }
-.spec-val {
-  font-size: 0.9rem;
-  color: var(--text);
-  font-weight: 500;
+.vid-box iframe{width:100%;height:100%;display:block;border:none;}
+.vid-note{
+  text-align:center;font-size:.73rem;color:var(--text-d);margin-top:.7rem;
+  font-family:'Josefin Sans',sans-serif;letter-spacing:.1em;
 }
 
-.features-right { display: flex; flex-direction: column; gap: 1rem; }
-.benefit-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.2rem;
-  border: 1px solid rgba(26,74,110,0.2);
-  background: rgba(255,252,248,0.8);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 12px rgba(26,74,110,0.06);
-  transition: all 0.3s;
+/* ── CASES ── */
+#usecases{background:var(--bg2);}
+.cases-hdr{margin-bottom:3rem;}
+.cases-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+.case-card{
+  background:var(--white);border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--border);box-shadow:var(--sh-s);transition:transform .3s,box-shadow .3s;
 }
-.benefit-row:hover {
-  border-color: rgba(26,74,110,0.2);
-  background: rgba(26,74,110,0.06);
-  transform: translateX(6px);
+.case-card:hover{transform:translateY(-4px);box-shadow:var(--sh-l);}
+.case-img{position:relative;height:200px;overflow:hidden;}
+.case-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(.92) saturate(.9);transition:transform .5s;
 }
-.benefit-icon {
-  width: 40px; height: 40px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(26,74,110,0.08);
-  border: 1px solid rgba(26,74,110,0.2);
+.case-card:hover .case-img img{transform:scale(1.04);}
+.cbadge{
+  position:absolute;top:1rem;left:1rem;
+  background:var(--navy);color:var(--white);
+  font-family:'Josefin Sans',sans-serif;font-size:.62rem;letter-spacing:.15em;
+  padding:.28rem .75rem;border-radius:100px;
 }
-.benefit-icon iconify-icon { font-size: 1.2rem; color: #1a4a6e; }
-.benefit-text h4 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  color: var(--text);
-}
-.benefit-text p {
-  font-size: 0.82rem;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
+.case-body{padding:1.4rem;}
+.case-t{font-size:.97rem;font-weight:600;margin-bottom:.45rem;}
+.case-d{font-size:.82rem;color:var(--text-m);line-height:1.75;}
 
-/* ── USE CASES ── */
-#usecases { background: #f0f4f8; }
-.cases-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-top: 4rem;
+/* ── CTA ── */
+#cta{
+  background:var(--navy-d);color:var(--white);
+  position:relative;overflow:hidden;text-align:center;
 }
-.case-card {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(26,74,110,0.2);
-  background: rgba(255,252,248,0.95);
-  backdrop-filter: blur(20px);
-  padding: 0;
-  box-shadow: 0 4px 24px rgba(26,74,110,0.08);
-  transition: transform 0.3s, border-color 0.3s;
+#cta::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 25% 50%,rgba(45,106,159,.35) 0%,transparent 55%),
+    radial-gradient(ellipse at 75% 50%,rgba(26,74,110,.4) 0%,transparent 55%);
 }
-.case-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(26,74,110,0.2);
+#cta::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:60px 60px;
 }
-.case-img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  display: block;
-  filter: brightness(0.7) saturate(0.8);
-  transition: filter 0.3s;
+.cta-wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;}
+.cta-eye{
+  font-family:'Josefin Sans',sans-serif;font-size:.68rem;letter-spacing:.35em;
+  color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:1.5rem;
 }
-.case-card:hover .case-img { filter: brightness(0.8) saturate(1.1); }
-.case-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 220px;
-  background: linear-gradient(to bottom, transparent 40%, rgba(2,5,16,0.95) 100%);
+.cta-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,4vw,3.2rem);font-weight:600;line-height:1.2;
+  color:var(--white);margin-bottom:1.2rem;
 }
-.case-badge {
-  position: absolute;
-  top: 1rem; left: 1rem;
-  padding: 0.25rem 0.75rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  background: rgba(26,74,110,0.2);
-  border: 1px solid #1a4a6e;
-  color: #1a4a6e;
+.cta-title em{font-style:italic;color:#a8c8e8;}
+.cta-desc{font-size:1rem;color:rgba(255,255,255,.62);line-height:1.82;margin-bottom:2.5rem;}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:1rem 2.8rem;background:var(--white);color:var(--navy-d);
+  font-weight:600;font-size:.95rem;letter-spacing:.08em;text-decoration:none;
+  border-radius:var(--rs);transition:all .25s;
+  box-shadow:0 8px 30px rgba(0,0,0,.22);
 }
-.case-content { padding: 1.5rem; }
-.case-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: var(--text);
-}
-.case-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+.cta-btn:hover{background:var(--navy-l);transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.3);}
 
-/* ── CTA SECTION ── */
-#cta {
-  position: relative;
-  background: linear-gradient(135deg, #0a1828 0%, #0f2a42 50%, #0a1828 100%);
-  overflow: hidden;
-  text-align: center;
+/* DM */
+.dm-sec{margin-top:2.5rem;}
+.dm-lbl{
+  font-family:'Josefin Sans',sans-serif;font-size:.67rem;letter-spacing:.25em;
+  color:rgba(255,255,255,.42);text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
 }
-.cta-bg {
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse at 50% 100%, rgba(45,106,159,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse at 30% 0%, rgba(26,74,110,0.15) 0%, transparent 50%);
+.dm-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.dm-btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.65rem 1.4rem;border:1px solid rgba(255,255,255,.2);border-radius:var(--rs);
+  color:rgba(255,255,255,.78);font-size:.81rem;text-decoration:none;
+  transition:all .25s;background:rgba(255,255,255,.05);backdrop-filter:blur(6px);
 }
-.cta-grid-lines {
-  position: absolute;
-  inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-.cta-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
-.cta-eyebrow {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: #2d6a9f;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-}
-.cta-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 900;
-  line-height: 1.15;
-  margin-bottom: 1.5rem;
-  color: #f0ede8;
-}
-.cta-title .neon {
-  background: linear-gradient(90deg, #2d6a9f, #e8d5b7, #2d6a9f);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient-shift 4s ease-in-out infinite;
-}
-@keyframes gradient-shift { 0%,100%{background-position:0%} 50%{background-position:100%} }
-.cta-desc {
-  font-size: 1.1rem;
-  color: #a09080;
-  line-height: 1.7;
-  margin-bottom: 3rem;
-}
-.cta-contact {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  margin-top: 3rem;
-  flex-wrap: wrap;
-}
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-  color: #a09080;
-}
-.contact-item iconify-icon { font-size: 1.2rem; color: #2d6a9f; }
-.contact-item a {
-  color: #f0ede8;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-.contact-item a:hover { color: #1a4a6e; }
+.dm-btn:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.12);color:var(--white);transform:translateY(-1px);}
+.dm-btn iconify-icon{font-size:.95rem;}
 
-.big-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.1rem 3rem;
-  background: linear-gradient(135deg, #2d6a9f, #8a6030);
-  color: var(--bg);
-  font-family: 'Noto Sans TC', sans-serif;
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.15em;
-  text-decoration: none;
-  cursor: none;
-  position: relative;
-  overflow: hidden;
-  clip-path: none; border-radius: 0;
-  transition: transform 0.2s, box-shadow 0.3s;
+/* contacts */
+.cta-contacts{
+  display:flex;justify-content:center;gap:2.5rem;margin-top:3rem;
+  padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap;
 }
-.big-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 60px rgba(26,74,110,0.2);
-}
-.big-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #fff, #1a4a6e);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.big-cta:hover::before { opacity: 0.15; }
-.big-cta span { position: relative; z-index: 1; }
+.cc-item{display:flex;align-items:center;gap:.6rem;font-size:.84rem;color:rgba(255,255,255,.58);}
+.cc-item iconify-icon{font-size:1.05rem;color:rgba(255,255,255,.38);}
+.cc-item a{color:rgba(255,255,255,.82);text-decoration:none;transition:color .2s;}
+.cc-item a:hover{color:var(--white);}
 
 /* ── FOOTER ── */
-footer {
-  background: #0a1828;
-  border-top: 1px solid rgba(26,74,110,0.15);
-  padding: 2.5rem 2rem;
+footer{
+  background:var(--navy-d);border-top:1px solid rgba(255,255,255,.08);padding:2rem 6%;
 }
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+.foot-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
 }
-.footer-brand {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #2d6a9f, #8a6030);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.foot-brand{font-family:'Josefin Sans',sans-serif;font-size:.95rem;letter-spacing:.12em;color:rgba(255,255,255,.68);font-weight:600;}
+.foot-copy{font-size:.7rem;color:rgba(255,255,255,.32);letter-spacing:.05em;}
+.foot-cert{
+  font-family:'Josefin Sans',sans-serif;font-size:.66rem;letter-spacing:.15em;
+  color:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.15);
+  padding:.28rem .7rem;border-radius:100px;
 }
-.footer-meta {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-.footer-cert {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.7rem;
-  color: #1a4a6e;
-  letter-spacing: 0.1em;
-  border: 1px solid rgba(26,74,110,0.2);
-  padding: 0.3rem 0.75rem;
-}
-
-/* ── DIVIDER ── */
-.divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #1a4a6e, transparent);
-  opacity: 0.3;
-}
-
-/* ── SCROLL REVEAL ── */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .hero-content { grid-template-columns: 1fr; padding-top: 6rem; }
-  .hero-visual { display: none; }
-  .specs-wrapper { grid-template-columns: 1fr; }
-  .cases-grid { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-  .hero-stats { gap: 1rem; }
+@media(max-width:900px){
+  .hero-content{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .specs-grid,.why-grid{grid-template-columns:1fr;gap:2rem;}
+  .vid-col{position:static;}
+  .cases-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
 }
-
-/* ── DM DOWNLOAD ── */
-.dm-download {
-  margin-top: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+@media(max-width:600px){
+  .feat-grid{grid-template-columns:1fr;}
+  section{padding:4rem 5%;}
 }
-.dm-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-.dm-label iconify-icon { font-size: 1rem; color: #1a4a6e; }
-.dm-buttons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.dm-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.7rem 1.5rem;
-  border: 1px solid rgba(26,74,110,0.3);
-  background: rgba(26,74,110,0.06);
-  color: #1a4a6e;
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.88rem;
-  text-decoration: none;
-  cursor: none;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-  backdrop-filter: blur(10px);
-}
-.dm-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(26,74,110,0.2), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.dm-btn:hover {
-  border-color: #1a4a6e;
-  box-shadow: 0 0 20px rgba(26,74,110,0.2), inset 0 0 20px rgba(26,74,110,0.2);
-  transform: translateY(-2px);
-}
-.dm-btn:hover::before { opacity: 1; }
-.dm-btn iconify-icon { font-size: 1.1rem; }
-
-
-/* ── WHY CHOOSE ── */
-#why { background: #ffffff; }
-.why-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  margin-top: 4rem;
-  align-items: start;
-}
-.why-list { display: flex; flex-direction: column; gap: 0; }
-.why-item {
-  display: flex;
-  gap: 1.2rem;
-  align-items: flex-start;
-  padding: 1.2rem 0;
-  border-bottom: 1px solid rgba(26,74,110,0.2);
-  transition: background 0.3s;
-  position: relative;
-}
-.why-item:last-child { border-bottom: none; }
-.why-item::before {
-  content: '';
-  position: absolute;
-  left: -1rem; top: 0; bottom: 0;
-  width: 2px;
-  background: #1a4a6e;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.why-item:hover::before { opacity: 1; }
-.why-icon {
-  flex-shrink: 0;
-  width: 40px; height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(26,74,110,0.2);
-  background: rgba(26,74,110,0.2);
-}
-.why-icon iconify-icon { font-size: 1.2rem; color: #1a4a6e; }
-.why-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 0.3rem;
-  letter-spacing: 0.02em;
-}
-.why-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
-
-/* Video */
-.why-video { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 100px; }
-.video-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  color: #1a4a6e;
-  text-transform: uppercase;
-}
-.video-label iconify-icon { font-size: 1.1rem; }
-.video-wrapper {
-  position: relative;
-  aspect-ratio: 16/9;
-  border: 1px solid rgba(26,74,110,0.2);
-  overflow: hidden;
-  background: #f5f0e8;
-}
-.video-wrapper iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.video-corner {
-  position: absolute;
-  width: 16px; height: 16px;
-  z-index: 2;
-  pointer-events: none;
-}
-.vc-tl { top: -1px; left: -1px; border-top: 2px solid #1a4a6e; border-left: 2px solid #1a4a6e; }
-.vc-tr { top: -1px; right: -1px; border-top: 2px solid #1a4a6e; border-right: 2px solid #1a4a6e; }
-.vc-bl { bottom: -1px; left: -1px; border-bottom: 2px solid #1a4a6e; border-left: 2px solid #1a4a6e; }
-.vc-br { bottom: -1px; right: -1px; border-bottom: 2px solid #1a4a6e; border-right: 2px solid #1a4a6e; }
-.video-caption {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .why-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .why-video { position: static; }
-}
-
-
-/* ── HERO SVG BACKGROUND ── */
-.hero-svg-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
-.hero-svg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-/* 流線波浪動畫 */
-.svg-wave {
-  transform-origin: center;
-}
-.w1 { animation: wave1 12s ease-in-out infinite; }
-.w2 { animation: wave2 15s ease-in-out infinite; }
-.w3 { animation: wave3 18s ease-in-out infinite; }
-.w4 { animation: wave1 14s ease-in-out infinite reverse; }
-.w5 { animation: wave2 16s ease-in-out infinite reverse; }
-
-@keyframes wave1 {
-  0%,100% { transform: translateY(0px) translateX(0px); }
-  33%     { transform: translateY(-18px) translateX(8px); }
-  66%     { transform: translateY(10px) translateX(-6px); }
-}
-@keyframes wave2 {
-  0%,100% { transform: translateY(0px) translateX(0px); }
-  33%     { transform: translateY(14px) translateX(-10px); }
-  66%     { transform: translateY(-20px) translateX(5px); }
-}
-@keyframes wave3 {
-  0%,100% { transform: translateY(0px); }
-  50%     { transform: translateY(-12px); }
-}
-
-/* 幾何圖形浮動 */
-.g1 { animation: geoFloat1 8s ease-in-out infinite; }
-.g2 { animation: geoFloat2 10s ease-in-out infinite; }
-.g3 { animation: geoFloat1 12s ease-in-out infinite reverse; }
-.g4 { animation: geoFloat2 9s ease-in-out infinite; }
-.g5 { animation: geoFloat1 11s ease-in-out infinite reverse; }
-.g6 { animation: geoSpin 20s linear infinite; transform-origin: 1050px 136px; }
-.g7 { animation: geoSpin 28s linear infinite reverse; transform-origin: 1050px 122px; }
-.g8 { animation: geoFloat1 7s ease-in-out infinite; }
-.g9 { animation: geoFloat2 9s ease-in-out infinite; }
-.g10 { animation: geoFloat1 11s ease-in-out infinite; }
-.g11 { animation: geoFloat2 6s ease-in-out infinite; }
-.g12 { animation: geoFloat1 8s ease-in-out infinite reverse; }
-.g13 { animation: geoFloat2 10s ease-in-out infinite; }
-
-@keyframes geoFloat1 {
-  0%,100% { transform: translateY(0px); opacity: 1; }
-  50%     { transform: translateY(-12px); opacity: 0.7; }
-}
-@keyframes geoFloat2 {
-  0%,100% { transform: translateY(0px) translateX(0px); }
-  33%     { transform: translateY(-8px) translateX(4px); }
-  66%     { transform: translateY(6px) translateX(-3px); }
-}
-@keyframes geoSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* hero overlay 調整，只做底部淡出 */
-.hero-overlay {
-  background: 
-    linear-gradient(to right, rgba(255,255,255,0.45) 0%, transparent 50%),
-    linear-gradient(to bottom, transparent 60%, rgba(248,252,255,0.6) 100%) !important;
-}
-
 </style>
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<!-- NAVBAR -->
-<nav>
-  <a href="#" class="nav-brand">API<span>®</span></a>
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-brand">
+    API
+    <span class="nav-sub">ARAM HUVIS · 頭皮智能分析</span>
+  </a>
   <ul class="nav-links">
     <li><a href="#features">核心功能</a></li>
-    <li><a href="#specs">規格參數</a></li>
-    <li><a href="#why">為何選擇</a></li><li><a href="#usecases">應用場景</a></li>
+    <li><a href="#specs">產品規格</a></li>
+    <li><a href="#why">為何選擇</a></li>
+    <li><a href="#usecases">應用場景</a></li>
     <li><a href="#cta" class="nav-cta">立即諮詢</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-
-  <!-- SVG 流線幾何背景 -->
   <div class="hero-svg-bg" aria-hidden="true">
-    <svg class="hero-svg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <svg viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
       <defs>
-        <!-- 主漸層 -->
-        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#ddeaf6;stop-opacity:1"/>
-          <stop offset="100%" style="stop-color:#ffffff;stop-opacity:1"/>
+        <linearGradient id="bgG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="58%" stop-color="#eef5fc"/>
+          <stop offset="100%" stop-color="#d4e7f5"/>
         </linearGradient>
-        <!-- 流線遮罩 -->
-        <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#1a4a6e;stop-opacity:0"/>
-          <stop offset="50%" style="stop-color:#1a4a6e;stop-opacity:0.18"/>
-          <stop offset="100%" style="stop-color:#1a4a6e;stop-opacity:0"/>
+        <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a4a6e" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#1a4a6e" stop-opacity=".13"/>
+          <stop offset="100%" stop-color="#1a4a6e" stop-opacity="0"/>
         </linearGradient>
-        <linearGradient id="lineGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" style="stop-color:#2d6a9f;stop-opacity:0"/>
-          <stop offset="50%" style="stop-color:#2d6a9f;stop-opacity:0.12"/>
-          <stop offset="100%" style="stop-color:#2d6a9f;stop-opacity:0"/>
+        <linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2d6a9f" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#2d6a9f" stop-opacity=".08"/>
+          <stop offset="100%" stop-color="#2d6a9f" stop-opacity="0"/>
         </linearGradient>
-        <linearGradient id="circGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#1a4a6e;stop-opacity:0.08"/>
-          <stop offset="100%" style="stop-color:#2d6a9f;stop-opacity:0.02"/>
-        </linearGradient>
-        <filter id="blur1">
-          <feGaussianBlur stdDeviation="2"/>
-        </filter>
-        <filter id="blur2">
-          <feGaussianBlur stdDeviation="1"/>
-        </filter>
+        <radialGradient id="cg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1a4a6e" stop-opacity=".07"/>
+          <stop offset="100%" stop-color="#1a4a6e" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="sf"><feGaussianBlur stdDeviation="1.5"/></filter>
+        <filter id="sf2"><feGaussianBlur stdDeviation="10"/></filter>
       </defs>
 
-      <!-- 底色 -->
-      <rect width="1440" height="900" fill="url(#grad1)"/>
+      <rect width="1440" height="900" fill="url(#bgG)"/>
 
-      <!-- 大圓弧流線 - 層1 -->
-      <path class="svg-wave w1" d="M-100,600 Q300,200 700,400 T1500,300" 
-            fill="none" stroke="url(#lineGrad1)" stroke-width="1.5" filter="url(#blur1)"/>
-      <path class="svg-wave w2" d="M-100,650 Q350,250 750,450 T1500,350" 
-            fill="none" stroke="url(#lineGrad2)" stroke-width="1" filter="url(#blur1)"/>
-      <path class="svg-wave w3" d="M-100,700 Q400,300 800,500 T1500,400" 
-            fill="none" stroke="url(#lineGrad1)" stroke-width="0.8" filter="url(#blur1)"/>
+      <!-- soft ambient glow -->
+      <ellipse cx="1150" cy="200" rx="330" ry="270" fill="url(#cg)" filter="url(#sf2)"/>
+      <ellipse cx="120"  cy="760" rx="210" ry="185" fill="url(#cg)" filter="url(#sf2)"/>
 
-      <!-- 大圓弧流線 - 層2 (右側) -->
-      <path class="svg-wave w4" d="M1540,200 Q1100,500 800,300 T0,500" 
-            fill="none" stroke="url(#lineGrad2)" stroke-width="1.2" filter="url(#blur1)"/>
-      <path class="svg-wave w5" d="M1540,280 Q1050,550 750,350 T0,580" 
-            fill="none" stroke="url(#lineGrad1)" stroke-width="0.8" filter="url(#blur1)"/>
+      <!-- flowing curves -->
+      <path class="w1" d="M-80,560 C200,210 600,500 900,300 S1310,110 1530,290" fill="none" stroke="url(#wg1)" stroke-width="1.5" filter="url(#sf)"/>
+      <path class="w2" d="M-80,630 C255,280 655,565 965,365 S1360,170 1530,365" fill="none" stroke="url(#wg2)" stroke-width="1"   filter="url(#sf)"/>
+      <path class="w3" d="M-80,700 C305,350 705,625 1025,425 S1390,230 1530,440" fill="none" stroke="url(#wg1)" stroke-width=".7"  filter="url(#sf)"/>
+      <path class="w4" d="M1530,185 C1205,505 905,255 625,455 S205,655 -80,405" fill="none" stroke="url(#wg2)" stroke-width="1.2" filter="url(#sf)"/>
+      <path class="w5" d="M1530,265 C1185,585 885,335 605,535 S185,725 -80,485" fill="none" stroke="url(#wg1)" stroke-width=".8"  filter="url(#sf)"/>
 
-      <!-- 幾何圓形 - 大 -->
-      <circle class="geo g1" cx="1100" cy="180" r="280" 
-              fill="none" stroke="#1a4a6e" stroke-width="0.6" stroke-opacity="0.12"/>
-      <circle class="geo g2" cx="1100" cy="180" r="200" 
-              fill="none" stroke="#2d6a9f" stroke-width="0.5" stroke-opacity="0.1"/>
-      <circle class="geo g3" cx="1100" cy="180" r="340" 
-              fill="none" stroke="#1a4a6e" stroke-width="0.4" stroke-opacity="0.07"/>
+      <!-- concentric rings right -->
+      <circle class="c1" cx="1150" cy="200" r="265" fill="none" stroke="#1a4a6e" stroke-width=".6"  stroke-opacity=".09"/>
+      <circle class="c2" cx="1150" cy="200" r="195" fill="none" stroke="#2d6a9f" stroke-width=".5"  stroke-opacity=".08"/>
+      <circle class="c3" cx="1150" cy="200" r="325" fill="none" stroke="#1a4a6e" stroke-width=".4"  stroke-opacity=".055"/>
+      <!-- concentric rings left-bottom -->
+      <circle class="c4" cx="120"  cy="760" r="205" fill="none" stroke="#2d6a9f" stroke-width=".5"  stroke-opacity=".07"/>
+      <circle class="c5" cx="120"  cy="760" r="145" fill="none" stroke="#1a4a6e" stroke-width=".4"  stroke-opacity=".055"/>
 
-      <!-- 幾何圓形 - 左下 -->
-      <circle class="geo g4" cx="150" cy="720" r="220" 
-              fill="none" stroke="#2d6a9f" stroke-width="0.5" stroke-opacity="0.08"/>
-      <circle class="geo g5" cx="150" cy="720" r="150" 
-              fill="none" stroke="#1a4a6e" stroke-width="0.4" stroke-opacity="0.06"/>
+      <!-- hexagons -->
+      <polygon class="h1" points="1090,68 1124,88 1124,130 1090,150 1056,130 1056,88"   fill="none" stroke="#1a4a6e" stroke-width=".8" stroke-opacity=".13"/>
+      <polygon class="h2" points="1090,42 1136,68 1136,150 1090,176 1044,150 1044,68"  fill="none" stroke="#2d6a9f" stroke-width=".5" stroke-opacity=".07"/>
 
-      <!-- 六邊形抽象幾何 -->
-      <polygon class="geo g6" points="1050,80 1090,108 1090,164 1050,192 1010,164 1010,108" 
-               fill="none" stroke="#1a4a6e" stroke-width="0.8" stroke-opacity="0.15"/>
-      <polygon class="geo g7" points="1050,50 1110,86 1110,158 1050,194 990,158 990,86" 
-               fill="none" stroke="#2d6a9f" stroke-width="0.5" stroke-opacity="0.08"/>
+      <!-- diamonds -->
+      <polygon points="242,112 256,130 242,148 228,130" fill="none" stroke="#1a4a6e" stroke-width="1"   stroke-opacity=".17"/>
+      <polygon points="1322,582 1334,598 1322,614 1310,598" fill="none" stroke="#2d6a9f" stroke-width=".8" stroke-opacity=".13"/>
+      <polygon points="402,822 414,838 402,854 390,838" fill="none" stroke="#1a4a6e" stroke-width=".7"   stroke-opacity=".09"/>
 
-      <!-- 小菱形點綴 -->
-      <polygon class="geo g8" points="200,120 215,140 200,160 185,140" 
-               fill="none" stroke="#1a4a6e" stroke-width="1" stroke-opacity="0.2"/>
-      <polygon class="geo g9" points="1300,600 1312,616 1300,632 1288,616" 
-               fill="none" stroke="#2d6a9f" stroke-width="0.8" stroke-opacity="0.15"/>
-      <polygon class="geo g10" points="380,820 392,836 380,852 368,836" 
-               fill="none" stroke="#1a4a6e" stroke-width="0.8" stroke-opacity="0.12"/>
+      <!-- crossmarks -->
+      <line x1="333" y1="193" x2="333" y2="208" stroke="#1a4a6e" stroke-width="1"   stroke-opacity=".21"/>
+      <line x1="325" y1="200" x2="341" y2="200" stroke="#1a4a6e" stroke-width="1"   stroke-opacity=".21"/>
+      <line x1="1221" y1="691" x2="1221" y2="704" stroke="#2d6a9f" stroke-width=".8" stroke-opacity=".15"/>
+      <line x1="1214" y1="697" x2="1228" y2="697" stroke="#2d6a9f" stroke-width=".8" stroke-opacity=".15"/>
+      <line x1="721" y1="816" x2="721" y2="828"  stroke="#1a4a6e" stroke-width=".7"  stroke-opacity=".12"/>
+      <line x1="715" y1="822" x2="727" y2="822"  stroke="#1a4a6e" stroke-width=".7"  stroke-opacity=".12"/>
 
-      <!-- 十字點 -->
-      <g class="geo g11" transform="translate(320,200)">
-        <line x1="-8" y1="0" x2="8" y2="0" stroke="#1a4a6e" stroke-width="1" stroke-opacity="0.25"/>
-        <line x1="0" y1="-8" x2="0" y2="8" stroke="#1a4a6e" stroke-width="1" stroke-opacity="0.25"/>
+      <!-- fine grid top-right -->
+      <g stroke="#1a4a6e" stroke-width=".3" stroke-opacity=".05">
+        <line x1="930" y1="0" x2="930" y2="285"/> <line x1="990" y1="0" x2="990" y2="285"/>
+        <line x1="1050" y1="0" x2="1050" y2="285"/> <line x1="1110" y1="0" x2="1110" y2="285"/>
+        <line x1="1170" y1="0" x2="1170" y2="285"/> <line x1="1230" y1="0" x2="1230" y2="285"/>
+        <line x1="1290" y1="0" x2="1290" y2="285"/> <line x1="1350" y1="0" x2="1350" y2="285"/>
+        <line x1="1410" y1="0" x2="1410" y2="285"/>
+        <line x1="930" y1="0"   x2="1440" y2="0"/>   <line x1="930" y1="57"  x2="1440" y2="57"/>
+        <line x1="930" y1="114" x2="1440" y2="114"/>  <line x1="930" y1="171" x2="1440" y2="171"/>
+        <line x1="930" y1="228" x2="1440" y2="228"/>  <line x1="930" y1="285" x2="1440" y2="285"/>
       </g>
-      <g class="geo g12" transform="translate(1200,700)">
-        <line x1="-6" y1="0" x2="6" y2="0" stroke="#2d6a9f" stroke-width="0.8" stroke-opacity="0.2"/>
-        <line x1="0" y1="-6" x2="0" y2="6" stroke="#2d6a9f" stroke-width="0.8" stroke-opacity="0.2"/>
-      </g>
-      <g class="geo g13" transform="translate(700,820)">
-        <line x1="-5" y1="0" x2="5" y2="0" stroke="#1a4a6e" stroke-width="0.7" stroke-opacity="0.15"/>
-        <line x1="0" y1="-5" x2="0" y2="5" stroke="#1a4a6e" stroke-width="0.7" stroke-opacity="0.15"/>
-      </g>
-
-      <!-- 細格線底紋右上角 -->
-      <g stroke="#1a4a6e" stroke-width="0.3" stroke-opacity="0.06">
-        <line x1="900" y1="0" x2="900" y2="300"/>
-        <line x1="960" y1="0" x2="960" y2="300"/>
-        <line x1="1020" y1="0" x2="1020" y2="300"/>
-        <line x1="1080" y1="0" x2="1080" y2="300"/>
-        <line x1="1140" y1="0" x2="1140" y2="300"/>
-        <line x1="1200" y1="0" x2="1200" y2="300"/>
-        <line x1="1260" y1="0" x2="1260" y2="300"/>
-        <line x1="1320" y1="0" x2="1320" y2="300"/>
-        <line x1="1380" y1="0" x2="1380" y2="300"/>
-        <line x1="900" y1="0" x2="1440" y2="0"/>
-        <line x1="900" y1="60" x2="1440" y2="60"/>
-        <line x1="900" y1="120" x2="1440" y2="120"/>
-        <line x1="900" y1="180" x2="1440" y2="180"/>
-        <line x1="900" y1="240" x2="1440" y2="240"/>
-        <line x1="900" y1="300" x2="1440" y2="300"/>
-      </g>
-
-      <!-- 光暈圓 -->
-      <circle cx="1100" cy="180" r="180" fill="url(#circGrad)" filter="url(#blur2)"/>
-      <circle cx="150" cy="720" r="120" fill="url(#circGrad)" filter="url(#blur2)"/>
     </svg>
   </div>
+  <div class="hero-fade"></div>
 
-  <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-text">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        NCC 認證 · 韓國原裝 · ARAM HUVIS
-      </div>
+    <div>
+      <div class="hero-badge"><span class="bdot"></span>NCC 認證 · 韓國原裝 · ARAM HUVIS</div>
       <h1 class="hero-title">
-        <span class="title-line1">AI 頭皮智能</span>
-        <span class="title-line2">分析系統</span>
+        AI 頭皮<em>智能</em><br>
+        <span class="hl">分析系統</span>
       </h1>
-      <p class="hero-subtitle">
-        <strong>3D 尖端科技顯微視儀</strong>，唯一通過國家通訊傳播委員會（NCC）認證。<br>
-        WiFi 無線傳輸，AI 科技導航，讓每次檢測都成為精準決策的起點。
+      <p class="hero-sub">
+        <strong>3D 尖端科技顯微視儀</strong>，唯一通過國家通訊傳播委員會（NCC）型式認證。<br>
+        WiFi 無線傳輸，AI 科技導航，讓每一次檢測都成為精準養護的起點。
       </p>
-      <div class="hero-cta-group">
-        <a href="#cta" class="btn-primary"><span>立即諮詢</span></a>
-        <a href="#features" class="btn-secondary">
-          <iconify-icon icon="mdi:arrow-down-circle-outline"></iconify-icon>
-          瞭解更多
-        </a>
+      <div class="hctas">
+        <a href="#cta" class="btn-primary"><iconify-icon icon="mdi:phone-outline"></iconify-icon>立即諮詢</a>
+        <a href="#features" class="btn-ghost"><iconify-icon icon="mdi:chevron-down"></iconify-icon>了解更多</a>
       </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <div class="stat-num">200x</div>
-          <div class="stat-label">最大放大倍率</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">5+</div>
-          <div class="stat-label">AI 檢測模式</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">0₁</div>
-          <div class="stat-label">月租費用</div>
-        </div>
+      <div class="hstats">
+        <div class="hstat"><div class="hstat-n">200x</div><div class="hstat-l">最大放大倍率</div></div>
+        <div class="hstat"><div class="hstat-n">6+</div><div class="hstat-l">AI 檢測模式</div></div>
+        <div class="hstat"><div class="hstat-n">NT$0</div><div class="hstat-l">月租費用</div></div>
       </div>
     </div>
-
     <div class="hero-visual">
-      <div class="device-frame">
-        <div class="device-glow"></div>
-        <div class="device-img" style="position:relative;overflow:hidden;">
-          <div class="scan-line"></div>
-          <div class="corner corner-tl"></div>
-          <div class="corner corner-tr"></div>
-          <div class="corner corner-bl"></div>
-          <div class="corner corner-br"></div>
-          <img src="device.png" alt="API 頭皮分析儀設備" loading="eager" style="object-fit:contain;background:transparent;">
+      <div class="dev-wrap">
+        <div class="dev-glow"></div>
+        <div class="dev-img">
+          <img src="device.png" alt="ARAM HUVIS API 頭皮分析儀" loading="eager">
         </div>
-        <div class="floating-tag tag-1">
-          <div>AI SCANNING</div>
-          <div style="color:#1a4a6e;font-size:0.6rem;margin-top:2px;">● ACTIVE</div>
-        </div>
-        <div class="floating-tag tag-2">
-          <div>WiFi CONNECTED</div>
-          <div style="color:#1a4a6e;font-size:0.6rem;margin-top:2px;">● ONLINE</div>
-        </div>
-        <div class="floating-tag tag-3">
-          <div>200x ZOOM</div>
-          <div style="color:#1a4a6e;font-size:0.6rem;margin-top:2px;">◈ READY</div>
-        </div>
+        <div class="pill p1">AI SCANNING<span>● ACTIVE</span></div>
+        <div class="pill p2">WiFi CONNECTED<span>● ONLINE</span></div>
+        <div class="pill p3">200x ZOOM<span>◈ READY</span></div>
       </div>
     </div>
   </div>
@@ -1319,73 +570,56 @@ footer {
 
 <!-- FEATURES -->
 <section id="features">
-  <div class="section-inner">
-    <div class="reveal">
-      <div class="section-label">CORE FEATURES</div>
-      <h2 class="section-title">四大核心 <span class="hl">競爭優勢</span></h2>
-      <p class="section-desc">專業設備，零月租，數據留在本地，安全無虞。讓您的診斷服務升級至科技新境界。</p>
+  <div class="inner">
+    <div class="feat-header reveal">
+      <div>
+        <div class="sec-label">CORE FEATURES</div>
+        <h2 class="sec-title">六大核心<span>競爭優勢</span></h2>
+      </div>
+      <p class="sec-desc">專業設備一次到位，零月租、數據不外傳，讓您的服務立即升級至科技新境界。</p>
     </div>
-    <div class="features-grid">
-      <div class="feature-card reveal">
-        <div class="card-num">01</div>
-        <div class="card-icon"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
-        <div class="card-title">零月租費</div>
-        <div class="card-desc">一次購入，終身使用。無需每月繳納訂閱費，設備即為您的資產，長期持有成本極低。</div>
-        <div class="card-tags">
-          <span class="tag">一次購入</span>
-          <span class="tag">長期投資</span>
-        </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal">
+        <div class="feat-n">01</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
+        <div class="feat-t">零月租費用</div>
+        <div class="feat-d">一次購入，終身使用。無需每月繳納訂閱費，設備即為您的長期資產。</div>
+        <div class="feat-tags"><span class="ftag">一次購入</span><span class="ftag">長期持有</span></div>
       </div>
-      <div class="feature-card reveal" style="transition-delay:0.1s">
-        <div class="card-num">02</div>
-        <div class="card-icon"><iconify-icon icon="mdi:shield-lock"></iconify-icon></div>
-        <div class="card-title">資訊安全無風險</div>
-        <div class="card-desc">無需上傳雲端，所有顧客資料保存在本地設備。顧客隱私受到最嚴密的保護，零外洩風險。</div>
-        <div class="card-tags">
-          <span class="tag">本地儲存</span>
-          <span class="tag">隱私安全</span>
-        </div>
+      <div class="feat-card reveal" style="transition-delay:.08s">
+        <div class="feat-n">02</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:shield-lock-outline"></iconify-icon></div>
+        <div class="feat-t">資訊安全無風險</div>
+        <div class="feat-d">無需上傳雲端，所有顧客資料保存在本地設備，隱私受到最嚴密保護。</div>
+        <div class="feat-tags"><span class="ftag">本地儲存</span><span class="ftag">零外洩</span></div>
       </div>
-      <div class="feature-card reveal" style="transition-delay:0.2s">
-        <div class="card-num">03</div>
-        <div class="card-icon"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
-        <div class="card-title">WiFi 無線傳輸</div>
-        <div class="card-desc">即時同步至手機或平板，一鍵拍照上傳，操作流暢無障礙。支援 iOS / Android 雙平台。</div>
-        <div class="card-tags">
-          <span class="tag">iOS</span>
-          <span class="tag">Android</span>
-          <span class="tag">即時同步</span>
-        </div>
+      <div class="feat-card reveal" style="transition-delay:.16s">
+        <div class="feat-n">03</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
+        <div class="feat-t">WiFi 無線傳輸</div>
+        <div class="feat-d">即時同步至手機或平板，支援 Windows、iOS、Android 三大平台，開機即用。</div>
+        <div class="feat-tags"><span class="ftag">iOS</span><span class="ftag">Android</span><span class="ftag">Windows</span></div>
       </div>
-      <div class="feature-card reveal" style="transition-delay:0.3s">
-        <div class="card-num">04</div>
-        <div class="card-icon"><iconify-icon icon="mdi:microscope"></iconify-icon></div>
-        <div class="card-title">3D 精密光學系統</div>
-        <div class="card-desc">60x 表面光、60x 偏振光、200x 自動變焦，多模式切換。開機即用，不需調整放大倍率。</div>
-        <div class="card-tags">
-          <span class="tag">60x</span>
-          <span class="tag">200x 自動變焦</span>
-        </div>
+      <div class="feat-card reveal" style="transition-delay:.24s">
+        <div class="feat-n">04</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:microscope"></iconify-icon></div>
+        <div class="feat-t">3D 精密光學系統</div>
+        <div class="feat-d">60x 表面光、60x 偏振光、200x 自動變焦，多模式切換，細節毫不遺漏。</div>
+        <div class="feat-tags"><span class="ftag">60x</span><span class="ftag">200x 自動</span></div>
       </div>
-      <div class="feature-card reveal" style="transition-delay:0.4s">
-        <div class="card-num">05</div>
-        <div class="card-icon"><iconify-icon icon="mdi:robot-excited"></iconify-icon></div>
-        <div class="card-title">AI 智能分析報告</div>
-        <div class="card-desc">自動診斷頭皮健康度、頭髮密度、毛孔狀況，一鍵生成可列印的專業分析報告。</div>
-        <div class="card-tags">
-          <span class="tag">自動報告</span>
-          <span class="tag">可列印</span>
-        </div>
+      <div class="feat-card reveal" style="transition-delay:.32s">
+        <div class="feat-n">05</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:robot-excited-outline"></iconify-icon></div>
+        <div class="feat-t">AI 智能分析報告</div>
+        <div class="feat-d">自動診斷頭皮健康度、髮量密度、毛孔狀況，一鍵生成可列印的專業報告。</div>
+        <div class="feat-tags"><span class="ftag">自動診斷</span><span class="ftag">可列印</span></div>
       </div>
-      <div class="feature-card reveal" style="transition-delay:0.5s">
-        <div class="card-num">06</div>
-        <div class="card-icon"><iconify-icon icon="mdi:certificate"></iconify-icon></div>
-        <div class="card-title">韓國原裝進口</div>
-        <div class="card-desc">ARAM HUVIS 正品認證，台灣總代理直接進口。售後服務由品牌原廠保障，品質無虞。</div>
-        <div class="card-tags">
-          <span class="tag">NCC 認證</span>
-          <span class="tag">原廠保固</span>
-        </div>
+      <div class="feat-card reveal" style="transition-delay:.40s">
+        <div class="feat-n">06</div>
+        <div class="feat-ico"><iconify-icon icon="mdi:certificate-outline"></iconify-icon></div>
+        <div class="feat-t">韓國原裝 NCC 認證</div>
+        <div class="feat-d">ARAM HUVIS 正品認證，台灣總代理直接進口，售後服務由原廠品質保障。</div>
+        <div class="feat-tags"><span class="ftag">NCC 認證</span><span class="ftag">原廠保固</span></div>
       </div>
     </div>
   </div>
@@ -1393,138 +627,90 @@ footer {
 
 <!-- SPECS -->
 <section id="specs">
-  <div class="section-inner">
+  <div class="inner">
     <div class="reveal">
-      <div class="section-label">TECHNICAL SPECS</div>
-      <h2 class="section-title">精密規格 <span class="hl">一覽</span></h2>
+      <div class="sec-label">SPECIFICATIONS</div>
+      <h2 class="sec-title">精密規格<span>一覽</span></h2>
     </div>
-    <div class="specs-wrapper">
-      <div>
-        <div class="spec-list reveal">
-          <div class="spec-item"><span class="spec-key">鏡頭一</span><span class="spec-val">60x 表面光</span></div>
-          <div class="spec-item"><span class="spec-key">鏡頭二</span><span class="spec-val">60x 偏振光</span></div>
-          <div class="spec-item"><span class="spec-key">鏡頭三</span><span class="spec-val">200x 表面光（自動變焦）</span></div>
-          <div class="spec-item"><span class="spec-key">鏡頭四</span><span class="spec-val">200x 偏振光（自動變焦）</span></div>
-          <div class="spec-item"><span class="spec-key">連接方式</span><span class="spec-val">WiFi 無線傳輸</span></div>
-          <div class="spec-item"><span class="spec-key">兼容平台</span><span class="spec-val">手機 / 平板 iOS & Android</span></div>
-          <div class="spec-item"><span class="spec-key">月租費用</span><span class="spec-val" style="color:#5a7a5a;">NT$ 0 ／零費用</span></div>
-          <div class="spec-item"><span class="spec-key">認證</span><span class="spec-val">NCC 國家通訊傳播委員會</span></div>
-          <div class="spec-item"><span class="spec-key">原產地</span><span class="spec-val">韓國 ARAM HUVIS 原裝</span></div>
-          <div class="spec-item"><span class="spec-key">台灣總代理</span><span class="spec-val">蓓薇媞 / 林先生 0932888077</span></div>
-        </div>
+    <div class="specs-grid">
+      <div class="spec-tbl reveal">
+        <div class="spec-row"><span class="spec-k">鏡頭一</span><span class="spec-v">60x 表面光</span></div>
+        <div class="spec-row"><span class="spec-k">鏡頭二</span><span class="spec-v">60x 偏振光</span></div>
+        <div class="spec-row"><span class="spec-k">鏡頭三</span><span class="spec-v">200x 表面光（自動變焦）</span></div>
+        <div class="spec-row"><span class="spec-k">鏡頭四</span><span class="spec-v">200x 偏振光（自動變焦）</span></div>
+        <div class="spec-row"><span class="spec-k">連接方式</span><span class="spec-v">WiFi 無線傳輸</span></div>
+        <div class="spec-row"><span class="spec-k">兼容系統</span><span class="spec-v">iOS · Android · Windows</span></div>
+        <div class="spec-row"><span class="spec-k">月租費</span><span class="spec-v hi">NT$0 零費用</span></div>
+        <div class="spec-row"><span class="spec-k">認證</span><span class="spec-v">NCC 國家通訊傳播委員會</span></div>
+        <div class="spec-row"><span class="spec-k">原產地</span><span class="spec-v">韓國 ARAM HUVIS 原裝進口</span></div>
+        <div class="spec-row"><span class="spec-k">台灣總代理</span><span class="spec-v">蓓薇媞 · 林先生 0932888077</span></div>
       </div>
-
-      <div class="features-right reveal">
-        <div class="benefit-row">
-          <div class="benefit-icon"><iconify-icon icon="mdi:account-group"></iconify-icon></div>
-          <div class="benefit-text">
-            <h4>顧客管理系統</h4>
-            <p>完整記錄每位顧客的檢測歷程，追蹤頭皮改善成效，提升回訪率與服務黏著度。</p>
-          </div>
+      <div class="ben-list reveal" style="transition-delay:.15s">
+        <div class="ben-item">
+          <div class="ben-ico"><iconify-icon icon="mdi:account-group-outline"></iconify-icon></div>
+          <div><div class="ben-t">顧客管理系統</div><div class="ben-d">完整記錄每位顧客的檢測歷程，追蹤頭皮改善成效，數據化管理提升回訪率。</div></div>
         </div>
-        <div class="benefit-row">
-          <div class="benefit-icon"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
-          <div class="benefit-text">
-            <h4>快速檢視模式</h4>
-            <p>即時顯示頭皮毛囊影像，清晰呈現紅腫、過敏、乾燥問題，專業顯微光學設計。</p>
-          </div>
+        <div class="ben-item">
+          <div class="ben-ico"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
+          <div><div class="ben-t">快速檢視模式</div><div class="ben-d">即時顯示頭皮毛囊影像，清晰呈現紅腫、過敏、乾燥問題，開機即可使用。</div></div>
         </div>
-        <div class="benefit-row">
-          <div class="benefit-icon"><iconify-icon icon="mdi:chart-donut"></iconify-icon></div>
-          <div class="benefit-text">
-            <h4>六大 AI 測量模式</h4>
-            <p>落髮狀況、頭皮狀況、頭髮密度、角蛋白敏感度、頭髮粗細、毛孔狀況，全面覆蓋。</p>
-          </div>
+        <div class="ben-item">
+          <div class="ben-ico"><iconify-icon icon="mdi:chart-donut"></iconify-icon></div>
+          <div><div class="ben-t">六大 AI 測量模式</div><div class="ben-d">落髮狀況、頭皮健康度、髮量密度、角質敏感度、髮絲粗細、毛孔狀況全面覆蓋。</div></div>
         </div>
-        <div class="benefit-row">
-          <div class="benefit-icon"><iconify-icon icon="mdi:printer"></iconify-icon></div>
-          <div class="benefit-text">
-            <h4>可列印專業報告</h4>
-            <p>自動生成圖文並茂的檢測報告，提升顧客信任感，成為業界最具說服力的診斷工具。</p>
-          </div>
+        <div class="ben-item">
+          <div class="ben-ico"><iconify-icon icon="mdi:printer-outline"></iconify-icon></div>
+          <div><div class="ben-t">可列印專業報告</div><div class="ben-d">自動生成圖文並茂的檢測報告，讓顧客看見數據，提升信任感與服務專業度。</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- WHY CHOOSE -->
+<!-- WHY -->
 <section id="why">
-  <div class="section-inner">
+  <div class="inner">
     <div class="reveal">
-      <div class="section-label">WHY CHOOSE US</div>
-      <h2 class="section-title">專業美業店家 <span class="hl">必備神器</span></h2>
-      <p class="section-desc">親愛的美業夥伴，面對客人的各種頭皮狀況時，您是否希望能快速提供專業且精準的分析？通過國家級 NCC 型式認證，為頭皮服務帶來更精準、更具信任感的專業體驗。</p>
+      <div class="sec-label">WHY CHOOSE US</div>
+      <h2 class="sec-title">專業美業<span>必備神器</span></h2>
+      <p class="sec-desc">通過國家級 NCC 型式認證，為頭皮服務帶來更精準、更具信任感的專業體驗。</p>
     </div>
-
     <div class="why-grid">
-      <!-- 左：優勢列表 -->
-      <div class="why-list reveal">
+      <div class="why-list reveal" style="transition-delay:.1s">
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
-          <div>
-            <div class="why-title">即時數據分析</div>
-            <div class="why-desc">透過 WiFi 連接平板、手機或電腦，立即進行檢視、記錄、比對檢測結果，溝通更專業。</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
+          <div><div class="why-t">即時數據分析</div><div class="why-d">透過 WiFi 連接平板、手機或電腦，立即進行檢視、記錄、比對，溝通更專業。</div></div>
         </div>
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:devices"></iconify-icon></div>
-          <div>
-            <div class="why-title">多系統相容</div>
-            <div class="why-desc">支援 Windows、iOS、Android，免擔心連線問題，效率大幅提升。</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:devices"></iconify-icon></div>
+          <div><div class="why-t">多系統相容</div><div class="why-d">支援 Windows、iOS、Android，免擔心連線問題，效率大幅提升。</div></div>
         </div>
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
-          <div>
-            <div class="why-title">精準檢測功能</div>
-            <div class="why-desc">落髮狀況、頭皮健康度、髮量密度、角質敏感度、髮絲粗細、毛孔狀態⋯一次完整掌握！</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
+          <div><div class="why-t">精準檢測功能</div><div class="why-d">落髮狀況、頭皮健康度、髮量密度、角質敏感度、髮絲粗細、毛孔狀態一次完整掌握。</div></div>
         </div>
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
-          <div>
-            <div class="why-title">零月租・零額外費用</div>
-            <div class="why-desc">無月租、無空間費，資料不外傳，全面守護資訊安全。輕巧設計，高效穩定，隨時啟用。</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
+          <div><div class="why-t">零月租・零額外費用</div><div class="why-d">無月租、無空間費，資料不外傳，全面守護資訊安全，輕巧設計隨時啟用。</div></div>
         </div>
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:robot-excited"></iconify-icon></div>
-          <div>
-            <div class="why-title">AI 智慧輔助 × 自動變焦</div>
-            <div class="why-desc">無線連接，開機即用，一鍵拍照。數據與影像同步儲存，支援前後比對，完整保留每次紀錄。</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:robot-excited-outline"></iconify-icon></div>
+          <div><div class="why-t">AI 智慧輔助 × 自動變焦</div><div class="why-d">無線連接，開機即用，一鍵拍照。數據與影像同步儲存，支援前後比對。</div></div>
         </div>
         <div class="why-item">
-          <div class="why-icon"><iconify-icon icon="mdi:handshake"></iconify-icon></div>
-          <div>
-            <div class="why-title">顧客信任橋樑</div>
-            <div class="why-desc">韓國原裝進口 × 國家級 NCC 認證 × 台灣總代理。這不只是一台檢測儀，更是您與顧客之間的信任橋樑。</div>
-          </div>
+          <div class="why-ico"><iconify-icon icon="mdi:handshake-outline"></iconify-icon></div>
+          <div><div class="why-t">顧客信任橋樑</div><div class="why-d">韓國原裝 × NCC 認證 × 台灣總代理。不只是檢測儀，更是您與顧客之間的信任基礎。</div></div>
         </div>
       </div>
-
-      <!-- 右：YouTube 影片 -->
-      <div class="why-video reveal" style="transition-delay:0.2s">
-        <div class="video-label">
-          <iconify-icon icon="mdi:play-circle"></iconify-icon>
-          功能介面介紹
+      <div class="vid-col reveal" style="transition-delay:.2s">
+        <div class="vid-label"><iconify-icon icon="mdi:play-circle-outline"></iconify-icon>功能介面介紹</div>
+        <div class="vid-box">
+          <iframe src="https://www.youtube.com/embed/yIcWohk7Ce0"
+                  title="API 頭皮檢測儀功能介面介紹"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
         </div>
-        <div class="video-wrapper">
-          <div class="video-corner vc-tl"></div>
-          <div class="video-corner vc-tr"></div>
-          <div class="video-corner vc-bl"></div>
-          <div class="video-corner vc-br"></div>
-          <iframe
-            src="https://www.youtube.com/embed/yIcWohk7Ce0"
-            title="API 頭皮檢測儀功能介面介紹"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
-        </div>
-        <div class="video-caption">點擊播放，瞭解完整操作介面</div>
+        <div class="vid-note">點擊播放，瞭解完整操作介面</div>
       </div>
     </div>
   </div>
@@ -1532,47 +718,51 @@ footer {
 
 <!-- USE CASES -->
 <section id="usecases">
-  <div class="section-inner">
-    <div class="reveal">
-      <div class="section-label">USE CASES</div>
-      <h2 class="section-title">專業 <span class="hl">應用場景</span></h2>
-      <p class="section-desc">適用於美髮沙龍、醫美診所、皮膚科診所等多元專業場域。</p>
+  <div class="inner">
+    <div class="cases-hdr reveal">
+      <div class="sec-label">USE CASES</div>
+      <h2 class="sec-title">專業<span>應用場景</span></h2>
+      <p class="sec-desc">適用於美髮沙龍、醫美診所、皮膚科及健康管理等多元專業場域。</p>
     </div>
     <div class="cases-grid">
       <div class="case-card reveal">
-        <img class="case-img" src="salon.webp" alt="美髮沙龍" loading="lazy">
-        <div class="case-overlay"></div>
-        <div class="case-badge">美髮沙龍</div>
-        <div class="case-content">
-          <div class="case-title">呈現真實畫面，建立專業信任</div>
-          <div class="case-desc">為顧客提供最專業的頭皮分析及照護建議，讓每次服務都成為升級體驗。提升客單價與顧客黏著度。</div>
+        <div class="case-img">
+          <img src="salon.webp" alt="美髮沙龍" loading="lazy">
+          <span class="cbadge">美髮沙龍</span>
+        </div>
+        <div class="case-body">
+          <div class="case-t">呈現真實畫面，建立專業信任</div>
+          <div class="case-d">為顧客提供最專業的頭皮分析及照護建議，讓每次服務成為升級體驗，提升客單價與黏著度。</div>
         </div>
       </div>
-      <div class="case-card reveal" style="transition-delay:0.15s">
-        <img class="case-img" src="medical.jpg" alt="醫美護理" loading="lazy">
-        <div class="case-overlay"></div>
-        <div class="case-badge">醫美護理</div>
-        <div class="case-content">
-          <div class="case-title">專業診斷輔助工具</div>
-          <div class="case-desc">詳實記錄頭皮毛髮狀況，作為治療前後的對比依據。提升診斷精確度，強化醫美服務的說服力。</div>
+      <div class="case-card reveal" style="transition-delay:.1s">
+        <div class="case-img">
+          <img src="medical.jpg" alt="醫美護理" loading="lazy">
+          <span class="cbadge">醫美護理</span>
+        </div>
+        <div class="case-body">
+          <div class="case-t">專業診斷輔助工具</div>
+          <div class="case-d">詳實記錄頭皮毛髮狀況，作為治療前後對比依據，提升診斷精確度與醫美服務說服力。</div>
         </div>
       </div>
-      <div class="case-card reveal" style="transition-delay:0.3s">
-        <img class="case-img" src="clinic.png" alt="皮膚科" loading="lazy">
-        <div class="case-overlay"></div>
-        <div class="case-badge">皮膚科診所</div>
-        <div class="case-content">
-          <div class="case-title">精準數據支撐臨床決策</div>
-          <div class="case-desc">AI 分析落髮狀況與頭皮健康度，提供量化數據，讓臨床診斷更具說服力與科學依據。</div>
+      <div class="case-card reveal" style="transition-delay:.2s">
+        <div class="case-img">
+          <img src="clinic.png" alt="皮膚科診所" loading="lazy">
+          <span class="cbadge">皮膚科診所</span>
+        </div>
+        <div class="case-body">
+          <div class="case-t">精準數據支撐臨床決策</div>
+          <div class="case-d">AI 分析落髮狀況與頭皮健康度，提供量化數據，讓臨床診斷更具科學依據與說服力。</div>
         </div>
       </div>
-      <div class="case-card reveal" style="transition-delay:0.45s">
-        <img class="case-img" src="health.png" alt="健康管理" loading="lazy">
-        <div class="case-overlay"></div>
-        <div class="case-badge">健康管理中心</div>
-        <div class="case-content">
-          <div class="case-title">長期追蹤改善成效</div>
-          <div class="case-desc">定期檢測、自動存檔，視覺化呈現頭皮健康改善曲線，讓顧客看見真實成果。</div>
+      <div class="case-card reveal" style="transition-delay:.3s">
+        <div class="case-img">
+          <img src="health.png" alt="健康管理中心" loading="lazy">
+          <span class="cbadge">健康管理中心</span>
+        </div>
+        <div class="case-body">
+          <div class="case-t">長期追蹤改善成效</div>
+          <div class="case-d">定期檢測、自動存檔，視覺化呈現頭皮健康改善曲線，讓顧客親眼見證真實成果。</div>
         </div>
       </div>
     </div>
@@ -1581,61 +771,40 @@ footer {
 
 <!-- CTA -->
 <section id="cta">
-  <div class="cta-bg"></div>
-  <div class="cta-grid-lines"></div>
-  <div class="section-inner">
-    <div class="cta-content reveal">
-      <div class="cta-eyebrow">// READY TO UPGRADE?</div>
+  <div class="inner">
+    <div class="cta-wrap reveal">
+      <div class="cta-eye">READY TO UPGRADE YOUR SERVICE?</div>
       <h2 class="cta-title">
         讓 AI 科技<br>
-        <span class="neon">重新定義</span><br>
-        您的頭皮診斷服務
+        <em>重新定義</em> 您的<br>
+        頭皮診斷服務
       </h2>
       <p class="cta-desc">
-        零月租費、資訊安全無風險、韓國原裝品質保證。<br>
-        現在聯繫我們，獲取專屬設備展示與報價方案。
+        零月租費 · 資訊安全無風險 · 韓國原裝品質保證<br>
+        現在聯繫我們，獲取專屬設備展示與報價方案
       </p>
-      <a href="tel:0932888077" class="big-cta">
-        <span>
-          <iconify-icon icon="mdi:phone" style="font-size:1.2rem;vertical-align:middle;"></iconify-icon>
-          立即諮詢 — 0932888077
-        </span>
+      <a href="tel:0932888077" class="cta-btn">
+        <iconify-icon icon="mdi:phone"></iconify-icon>立即諮詢 — 0932888077
       </a>
-
-      <!-- DM DOWNLOAD -->
-      <div class="dm-download">
-        <div class="dm-label">
-          <iconify-icon icon="mdi:file-download-outline"></iconify-icon>
-          下載產品 DM
-        </div>
-        <div class="dm-buttons">
-          <a href="https://drive.google.com/file/d/1AW-6ER25zOk4Udx3F4KEdYIcvMPpTkXj/view?usp=sharing"
-             target="_blank" rel="noopener" class="dm-btn">
+      <div class="dm-sec">
+        <div class="dm-lbl"><iconify-icon icon="mdi:file-download-outline"></iconify-icon>下載產品 DM</div>
+        <div class="dm-btns">
+          <a href="https://drive.google.com/file/d/1AW-6ER25zOk4Udx3F4KEdYIcvMPpTkXj/view?usp=sharing" target="_blank" rel="noopener" class="dm-btn">
             <iconify-icon icon="mdi:file-document-outline"></iconify-icon>
-            <span>API 頭皮檢測儀 DM（簡介1）</span>
-            <iconify-icon icon="mdi:open-in-new" style="font-size:0.8rem;opacity:0.6;"></iconify-icon>
+            API 頭皮檢測儀 DM（簡介1）
+            <iconify-icon icon="mdi:open-in-new"></iconify-icon>
           </a>
-          <a href="https://drive.google.com/file/d/1haNZ3uc_cLHzQtmA7ceskayplHyoScLl/view?usp=sharing"
-             target="_blank" rel="noopener" class="dm-btn">
+          <a href="https://drive.google.com/file/d/1haNZ3uc_cLHzQtmA7ceskayplHyoScLl/view?usp=sharing" target="_blank" rel="noopener" class="dm-btn">
             <iconify-icon icon="mdi:file-document-outline"></iconify-icon>
-            <span>API 頭皮檢測儀 DM（簡介2）</span>
-            <iconify-icon icon="mdi:open-in-new" style="font-size:0.8rem;opacity:0.6;"></iconify-icon>
+            API 頭皮檢測儀 DM（簡介2）
+            <iconify-icon icon="mdi:open-in-new"></iconify-icon>
           </a>
         </div>
       </div>
-      <div class="cta-contact">
-        <div class="contact-item">
-          <iconify-icon icon="mdi:map-marker"></iconify-icon>
-          <span>台灣總代理 · 蓓薇媞</span>
-        </div>
-        <div class="contact-item">
-          <iconify-icon icon="mdi:account-tie"></iconify-icon>
-          <span>服務人員：<a href="tel:0932888077">林先生</a></span>
-        </div>
-        <div class="contact-item">
-          <iconify-icon icon="mdi:certificate"></iconify-icon>
-          <span>ARAM HUVIS 正品認證</span>
-        </div>
+      <div class="cta-contacts">
+        <div class="cc-item"><iconify-icon icon="mdi:map-marker-outline"></iconify-icon><span>台灣總代理 · 蓓薇媞</span></div>
+        <div class="cc-item"><iconify-icon icon="mdi:account-tie-outline"></iconify-icon><span>服務人員：<a href="tel:0932888077">林先生</a></span></div>
+        <div class="cc-item"><iconify-icon icon="mdi:certificate-outline"></iconify-icon><span>ARAM HUVIS 正品認證</span></div>
       </div>
     </div>
   </div>
@@ -1643,69 +812,31 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-brand">API SCALP ANALYZER</div>
-    <div class="footer-meta">© 2024 蓓薇媞 · ARAM HUVIS 台灣總代理 · 林先生 0932888077</div>
-    <div class="footer-cert">NCC 認證 ✓</div>
+  <div class="foot-inner">
+    <div class="foot-brand">API · ARAM HUVIS</div>
+    <div class="foot-copy">© 2024 蓓薇媞 · 台灣總代理 · 林先生 0932888077</div>
+    <div class="foot-cert">NCC 認證 ✓</div>
   </div>
 </footer>
 
 <script>
-// ── CURSOR ──
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function tick() {
-  rx += (mx - rx) * 0.18;
-  ry += (my - ry) * 0.18;
-  cursor.style.left = mx + 'px';
-  cursor.style.top = my + 'px';
-  ring.style.left = rx + 'px';
-  ring.style.top = ry + 'px';
-  requestAnimationFrame(tick);
-})();
+// navbar scroll
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
-// ── SVG HERO BG: handled in HTML ──
-
-// ── GSAP SCROLL REVEAL ──
+// scroll reveal
 gsap.registerPlugin(ScrollTrigger);
 document.querySelectorAll('.reveal').forEach(el => {
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 85%',
-    onEnter: () => el.classList.add('visible')
-  });
+  ScrollTrigger.create({ trigger: el, start: 'top 88%', onEnter: () => el.classList.add('in') });
 });
 
-// GSAP Hero Entrance
-gsap.from('.hero-badge', { duration: 0.8, y: 20, opacity: 0, delay: 0.3 });
-gsap.from('.hero-title', { duration: 1, y: 40, opacity: 0, delay: 0.5 });
-gsap.from('.hero-subtitle', { duration: 0.8, y: 20, opacity: 0, delay: 0.8 });
-gsap.from('.hero-cta-group', { duration: 0.8, y: 20, opacity: 0, delay: 1 });
-gsap.from('.hero-stats', { duration: 0.8, y: 20, opacity: 0, delay: 1.2 });
-gsap.from('.device-frame', { duration: 1.2, x: 60, opacity: 0, delay: 0.6, ease: 'power3.out' });
-
-// ── MAGNETIC BUTTON ──
-document.querySelectorAll('.btn-primary, .big-cta').forEach(btn => {
-  btn.addEventListener('mousemove', e => {
-    const r = btn.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2);
-    const dy = e.clientY - (r.top + r.height / 2);
-    btn.style.transform = `translateY(-2px) translate(${dx*0.15}px, ${dy*0.15}px)`;
-  });
-  btn.addEventListener('mouseleave', () => {
-    btn.style.transform = '';
-  });
-});
-
-// ── NAVBAR scroll effect ──
-window.addEventListener('scroll', () => {
-  const nav = document.querySelector('nav');
-  nav.style.background = window.scrollY > 50
-    ? 'rgba(248, 245, 240, 0.98)'
-    : 'rgba(248, 245, 240, 0.92)';
-});
+// hero entrance
+gsap.from('.hero-badge', { y:20, opacity:0, duration:.7, delay:.3 });
+gsap.from('.hero-title', { y:32, opacity:0, duration:.9, delay:.5 });
+gsap.from('.hero-sub',   { y:20, opacity:0, duration:.7, delay:.75 });
+gsap.from('.hctas',      { y:16, opacity:0, duration:.7, delay:.95 });
+gsap.from('.hstats',     { y:16, opacity:0, duration:.7, delay:1.1 });
+gsap.from('.dev-wrap',   { x:50, opacity:0, duration:1.1, delay:.6, ease:'power3.out' });
 </script>
 </body>
 </html>
