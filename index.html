@@ -843,6 +843,164 @@ footer {
   .nav-links { display: none; }
   .hero-stats { gap: 1rem; }
 }
+
+/* ── DM DOWNLOAD ── */
+.dm-download {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.dm-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.dm-label iconify-icon { font-size: 1rem; color: var(--neon-cyan); }
+.dm-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid rgba(0,245,255,0.35);
+  background: rgba(0,245,255,0.05);
+  color: var(--neon-cyan);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.88rem;
+  text-decoration: none;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+.dm-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,245,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.dm-btn:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 20px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.05);
+  transform: translateY(-2px);
+}
+.dm-btn:hover::before { opacity: 1; }
+.dm-btn iconify-icon { font-size: 1.1rem; }
+
+
+/* ── WHY CHOOSE ── */
+#why { background: var(--bg); }
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-top: 4rem;
+  align-items: start;
+}
+.why-list { display: flex; flex-direction: column; gap: 0; }
+.why-item {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(0,245,255,0.07);
+  transition: background 0.3s;
+  position: relative;
+}
+.why-item:last-child { border-bottom: none; }
+.why-item::before {
+  content: '';
+  position: absolute;
+  left: -1rem; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--neon-cyan);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.why-item:hover::before { opacity: 1; }
+.why-icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,245,255,0.25);
+  background: rgba(0,245,255,0.06);
+}
+.why-icon iconify-icon { font-size: 1.2rem; color: var(--neon-cyan); }
+.why-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.02em;
+}
+.why-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
+
+/* Video */
+.why-video { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 100px; }
+.video-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+}
+.video-label iconify-icon { font-size: 1.1rem; }
+.video-wrapper {
+  position: relative;
+  aspect-ratio: 16/9;
+  border: 1px solid rgba(0,245,255,0.2);
+  overflow: hidden;
+  background: #000;
+}
+.video-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.video-corner {
+  position: absolute;
+  width: 16px; height: 16px;
+  z-index: 2;
+  pointer-events: none;
+}
+.vc-tl { top: -1px; left: -1px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+.vc-tr { top: -1px; right: -1px; border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+.vc-bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+.vc-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+.video-caption {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .why-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .why-video { position: static; }
+}
+
 </style>
 </head>
 <body>
@@ -856,7 +1014,7 @@ footer {
   <ul class="nav-links">
     <li><a href="#features">核心功能</a></li>
     <li><a href="#specs">規格參數</a></li>
-    <li><a href="#usecases">應用場景</a></li>
+    <li><a href="#why">為何選擇</a></li><li><a href="#usecases">應用場景</a></li>
     <li><a href="#cta" class="nav-cta">立即諮詢</a></li>
   </ul>
 </nav>
@@ -1063,6 +1221,88 @@ footer {
   </div>
 </section>
 
+
+<!-- WHY CHOOSE -->
+<section id="why">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">WHY CHOOSE US</div>
+      <h2 class="section-title">專業美業店家 <span class="hl">必備神器</span></h2>
+      <p class="section-desc">親愛的美業夥伴，面對客人的各種頭皮狀況時，您是否希望能快速提供專業且精準的分析？通過國家級 NCC 型式認證，為頭皮服務帶來更精準、更具信任感的專業體驗。</p>
+    </div>
+
+    <div class="why-grid">
+      <!-- 左：優勢列表 -->
+      <div class="why-list reveal">
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
+          <div>
+            <div class="why-title">即時數據分析</div>
+            <div class="why-desc">透過 WiFi 連接平板、手機或電腦，立即進行檢視、記錄、比對檢測結果，溝通更專業。</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:devices"></iconify-icon></div>
+          <div>
+            <div class="why-title">多系統相容</div>
+            <div class="why-desc">支援 Windows、iOS、Android，免擔心連線問題，效率大幅提升。</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
+          <div>
+            <div class="why-title">精準檢測功能</div>
+            <div class="why-desc">落髮狀況、頭皮健康度、髮量密度、角質敏感度、髮絲粗細、毛孔狀態⋯一次完整掌握！</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
+          <div>
+            <div class="why-title">零月租・零額外費用</div>
+            <div class="why-desc">無月租、無空間費，資料不外傳，全面守護資訊安全。輕巧設計，高效穩定，隨時啟用。</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:robot-excited"></iconify-icon></div>
+          <div>
+            <div class="why-title">AI 智慧輔助 × 自動變焦</div>
+            <div class="why-desc">無線連接，開機即用，一鍵拍照。數據與影像同步儲存，支援前後比對，完整保留每次紀錄。</div>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon"><iconify-icon icon="mdi:handshake"></iconify-icon></div>
+          <div>
+            <div class="why-title">顧客信任橋樑</div>
+            <div class="why-desc">韓國原裝進口 × 國家級 NCC 認證 × 台灣總代理。這不只是一台檢測儀，更是您與顧客之間的信任橋樑。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：YouTube 影片 -->
+      <div class="why-video reveal" style="transition-delay:0.2s">
+        <div class="video-label">
+          <iconify-icon icon="mdi:play-circle"></iconify-icon>
+          功能介面介紹
+        </div>
+        <div class="video-wrapper">
+          <div class="video-corner vc-tl"></div>
+          <div class="video-corner vc-tr"></div>
+          <div class="video-corner vc-bl"></div>
+          <div class="video-corner vc-br"></div>
+          <iframe
+            src="https://www.youtube.com/embed/yIcWohk7Ce0"
+            title="API 頭皮檢測儀功能介面介紹"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="video-caption">點擊播放，瞭解完整操作介面</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- USE CASES -->
 <section id="usecases">
   <div class="section-inner">
@@ -1134,6 +1374,28 @@ footer {
           立即諮詢 — 0932888077
         </span>
       </a>
+
+      <!-- DM DOWNLOAD -->
+      <div class="dm-download">
+        <div class="dm-label">
+          <iconify-icon icon="mdi:file-download-outline"></iconify-icon>
+          下載產品 DM
+        </div>
+        <div class="dm-buttons">
+          <a href="https://drive.google.com/file/d/1AW-6ER25zOk4Udx3F4KEdYIcvMPpTkXj/view?usp=sharing"
+             target="_blank" rel="noopener" class="dm-btn">
+            <iconify-icon icon="mdi:file-document-outline"></iconify-icon>
+            <span>API 頭皮檢測儀 DM（簡介1）</span>
+            <iconify-icon icon="mdi:open-in-new" style="font-size:0.8rem;opacity:0.6;"></iconify-icon>
+          </a>
+          <a href="https://drive.google.com/file/d/1haNZ3uc_cLHzQtmA7ceskayplHyoScLl/view?usp=sharing"
+             target="_blank" rel="noopener" class="dm-btn">
+            <iconify-icon icon="mdi:file-document-outline"></iconify-icon>
+            <span>API 頭皮檢測儀 DM（簡介2）</span>
+            <iconify-icon icon="mdi:open-in-new" style="font-size:0.8rem;opacity:0.6;"></iconify-icon>
+          </a>
+        </div>
+      </div>
       <div class="cta-contact">
         <div class="contact-item">
           <iconify-icon icon="mdi:map-marker"></iconify-icon>
