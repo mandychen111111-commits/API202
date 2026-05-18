@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API 頭皮智能分析儀 — 韓國原裝 3D 顯微科技</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+<style>
+:root {
+  --bg: #020510;
+  --bg2: #050c1a;
+  --neon-cyan: #00f5ff;
+  --neon-blue: #0080ff;
+  --neon-purple: #a855f7;
+  --neon-green: #00ff88;
+  --text: #e8f4ff;
+  --text-dim: #7a9ab8;
+  --card-bg: rgba(0, 20, 50, 0.6);
+  --border-glow: rgba(0, 245, 255, 0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+  box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px rgba(0,245,255,0.5);
+  mix-blend-mode: screen;
+}
+#cursor-ring {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(0,245,255,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: all 0.15s ease-out;
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 20px; height: 20px; background: var(--neon-purple); }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: var(--neon-purple); }
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(2, 5, 16, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+}
+.nav-brand {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-decoration: none;
+}
+.nav-brand span {
+  color: var(--neon-cyan);
+  -webkit-text-fill-color: var(--neon-cyan);
+  font-size: 0.7em;
+  vertical-align: super;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 1px;
+  background: var(--neon-cyan);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+.nav-links a:hover { color: var(--neon-cyan); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta {
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 0.5rem 1.4rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+.nav-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--neon-cyan);
+  transform: translateX(-100%);
+  transition: transform 0.3s;
+  z-index: -1;
+}
+.nav-cta:hover { color: var(--bg); }
+.nav-cta:hover::before { transform: translateX(0); }
+
+/* ── HERO ── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+#three-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 50%, rgba(0,128,255,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(168,85,247,0.1) 0%, transparent 50%),
+              linear-gradient(to bottom, rgba(2,5,16,0.3) 0%, rgba(2,5,16,0.8) 100%);
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border: 1px solid rgba(0,245,255,0.4);
+  background: rgba(0,245,255,0.05);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--neon-cyan);
+  letter-spacing: 0.15em;
+  margin-bottom: 1.5rem;
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  background: var(--neon-green);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.title-line1 { display: block; color: var(--text); }
+.title-line2 {
+  display: block;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(0,245,255,0.5));
+}
+.hero-subtitle {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: var(--text-dim);
+  margin: 1.5rem 0 2.5rem;
+  line-height: 1.8;
+}
+.hero-subtitle strong { color: var(--neon-cyan); font-weight: 500; }
+
+.hero-cta-group { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.btn-primary {
+  position: relative;
+  padding: 0.9rem 2.5rem;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  color: var(--bg);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: none;
+  text-decoration: none;
+  display: inline-block;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,245,255,0.4); }
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary span { position: relative; z-index: 1; }
+.btn-secondary {
+  padding: 0.9rem 2rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-dim);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.9rem;
+  cursor: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+.btn-secondary:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+.stat {
+  border-left: 2px solid var(--neon-cyan);
+  padding-left: 1rem;
+}
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0,245,255,0.6);
+}
+.stat-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 0.3rem; }
+
+/* Hero Image Card */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.device-frame {
+  position: relative;
+  width: auto;
+  max-width: 200px;
+}
+.device-glow {
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(ellipse, rgba(0,128,255,0.3) 0%, transparent 70%);
+  animation: pulse-glow 3s ease-in-out infinite;
+  border-radius: 50%;
+}
+@keyframes pulse-glow {
+  0%,100%{ opacity: 0.6; transform: scale(1); }
+  50%{ opacity: 1; transform: scale(1.05); }
+}
+.device-img {
+  width: 100%;
+  border-radius: 12px;
+  filter: drop-shadow(0 0 40px rgba(0,245,255,0.3));
+  position: relative;
+  z-index: 2;
+  background: rgba(5, 15, 35, 0.3);
+  padding: 1rem;
+  border: 1px solid rgba(0,245,255,0.2);
+}
+.device-img img {
+  width: 100%;
+  max-height: 480px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+.scan-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  animation: scan 3s linear infinite;
+  z-index: 3;
+  top: 0;
+  box-shadow: 0 0 8px var(--neon-cyan);
+}
+@keyframes scan { 0%{top:0} 100%{top:100%} }
+
+.corner {
+  position: absolute;
+  width: 20px; height: 20px;
+  z-index: 4;
+}
+.corner-tl { top: -2px; left: -2px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+.corner-tr { top: -2px; right: -2px; border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+.corner-bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
+.corner-br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+
+.floating-tag {
+  position: absolute;
+  background: rgba(0,20,50,0.9);
+  border: 1px solid var(--neon-cyan);
+  padding: 0.5rem 0.8rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
+  backdrop-filter: blur(10px);
+  z-index: 5;
+  animation: float 4s ease-in-out infinite;
+}
+.tag-1 { top: 20%; right: -30px; animation-delay: 0s; }
+.tag-2 { bottom: 25%; left: -40px; animation-delay: 1.5s; }
+.tag-3 { top: 60%; right: -25px; animation-delay: 0.8s; }
+@keyframes float {
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-8px); }
+}
+
+/* ── SECTION COMMON ── */
+section { padding: 6rem 2rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 40px; height: 1px;
+  background: var(--neon-cyan);
+}
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+.section-title .hl {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-desc {
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+/* ── FEATURES / VALUE PROPS ── */
+#features { background: var(--bg2); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 4rem;
+}
+.feature-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid rgba(0,245,255,0.15);
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0,245,255,0.4);
+  box-shadow: 0 20px 60px rgba(0,245,255,0.1), 0 0 0 1px rgba(0,245,255,0.1);
+}
+.feature-card:hover::before { opacity: 1; }
+
+/* border beam animation */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: -2px; left: -200%;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  animation: beam 4s linear infinite;
+}
+@keyframes beam { to { left: 200%; } }
+.feature-card:nth-child(2)::after { animation-delay: 1.3s; }
+.feature-card:nth-child(3)::after { animation-delay: 2.6s; }
+
+.card-icon {
+  width: 56px; height: 56px;
+  border: 1px solid rgba(0,245,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.card-icon::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, var(--neon-cyan), transparent);
+  opacity: 0.2;
+}
+.card-icon iconify-icon { font-size: 1.8rem; color: var(--neon-cyan); }
+.card-num {
+  position: absolute;
+  top: 1rem; right: 1.5rem;
+  font-family: 'Orbitron', monospace;
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(0,245,255,0.06);
+  line-height: 1;
+}
+.card-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.card-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.tag {
+  padding: 0.2rem 0.6rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(0,245,255,0.2);
+  color: var(--neon-cyan);
+  background: rgba(0,245,255,0.05);
+}
+
+/* ── SPECS ── */
+#specs {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+#specs::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(0,128,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.specs-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  margin-top: 4rem;
+}
+.spec-list { display: flex; flex-direction: column; gap: 0; }
+.spec-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+.spec-item:hover { background: rgba(0,245,255,0.03); }
+.spec-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--neon-cyan);
+  opacity: 0.1;
+  transition: width 0.4s;
+}
+.spec-item:hover::before { width: 100%; }
+.spec-key {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.spec-key::before {
+  content: '▸';
+  color: var(--neon-cyan);
+  font-size: 0.7rem;
+}
+.spec-val {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.features-right { display: flex; flex-direction: column; gap: 1rem; }
+.benefit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(0,245,255,0.1);
+  background: rgba(0,20,50,0.4);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+.benefit-row:hover {
+  border-color: rgba(0,245,255,0.3);
+  background: rgba(0,245,255,0.05);
+  transform: translateX(6px);
+}
+.benefit-icon {
+  width: 40px; height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,245,255,0.1);
+  border: 1px solid rgba(0,245,255,0.2);
+}
+.benefit-icon iconify-icon { font-size: 1.2rem; color: var(--neon-cyan); }
+.benefit-text h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+.benefit-text p {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── USE CASES ── */
+#usecases { background: var(--bg2); }
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+}
+.case-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0,245,255,0.1);
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  padding: 0;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.case-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,245,255,0.3);
+}
+.case-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.7) saturate(0.8);
+  transition: filter 0.3s;
+}
+.case-card:hover .case-img { filter: brightness(0.8) saturate(1.1); }
+.case-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 220px;
+  background: linear-gradient(to bottom, transparent 40%, rgba(2,5,16,0.95) 100%);
+}
+.case-badge {
+  position: absolute;
+  top: 1rem; left: 1rem;
+  padding: 0.25rem 0.75rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  background: rgba(0,245,255,0.15);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+.case-content { padding: 1.5rem; }
+.case-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+.case-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+
+/* ── CTA SECTION ── */
+#cta {
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+  text-align: center;
+}
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 100%, rgba(0,128,255,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse at 30% 0%, rgba(168,85,247,0.1) 0%, transparent 50%);
+}
+.cta-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.cta-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.cta-eyebrow {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--neon-cyan);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+.cta-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+.cta-title .neon {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-cyan));
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease-in-out infinite;
+}
+@keyframes gradient-shift { 0%,100%{background-position:0%} 50%{background-position:100%} }
+.cta-desc {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+.cta-contact {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+.contact-item iconify-icon { font-size: 1.2rem; color: var(--neon-cyan); }
+.contact-item a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+.contact-item a:hover { color: var(--neon-cyan); }
+
+.big-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 3rem;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  color: var(--bg);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-decoration: none;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.big-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0,245,255,0.4);
+}
+.big-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #fff, var(--neon-cyan));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.big-cta:hover::before { opacity: 0.15; }
+.big-cta span { position: relative; z-index: 1; }
+
+/* ── FOOTER ── */
+footer {
+  background: rgba(0,0,0,0.8);
+  border-top: 1px solid rgba(0,245,255,0.1);
+  padding: 2.5rem 2rem;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-brand {
+  font-family: 'Orbitron', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.footer-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+.footer-cert {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(0,245,255,0.2);
+  padding: 0.3rem 0.75rem;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  opacity: 0.3;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero-content { grid-template-columns: 1fr; padding-top: 6rem; }
+  .hero-visual { display: none; }
+  .specs-wrapper { grid-template-columns: 1fr; }
+  .cases-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .hero-stats { gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="#" class="nav-brand">API<span>®</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">核心功能</a></li>
+    <li><a href="#specs">規格參數</a></li>
+    <li><a href="#usecases">應用場景</a></li>
+    <li><a href="#cta" class="nav-cta">立即諮詢</a></li>
+  </ul>
+</nav>
+
+<!-- THREE.JS CANVAS -->
+<canvas id="three-canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        NCC 認證 · 韓國原裝 · ARAM HUVIS
+      </div>
+      <h1 class="hero-title">
+        <span class="title-line1">AI 頭皮智能</span>
+        <span class="title-line2">分析系統</span>
+      </h1>
+      <p class="hero-subtitle">
+        <strong>3D 尖端科技顯微視儀</strong>，唯一通過國家通訊傳播委員會（NCC）認證。<br>
+        WiFi 無線傳輸，AI 科技導航，讓每次檢測都成為精準決策的起點。
+      </p>
+      <div class="hero-cta-group">
+        <a href="#cta" class="btn-primary"><span>立即諮詢</span></a>
+        <a href="#features" class="btn-secondary">
+          <iconify-icon icon="mdi:arrow-down-circle-outline"></iconify-icon>
+          瞭解更多
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">200x</div>
+          <div class="stat-label">最大放大倍率</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">5+</div>
+          <div class="stat-label">AI 檢測模式</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">0₁</div>
+          <div class="stat-label">月租費用</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="device-frame">
+        <div class="device-glow"></div>
+        <div class="device-img" style="position:relative;overflow:hidden;">
+          <div class="scan-line"></div>
+          <div class="corner corner-tl"></div>
+          <div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div>
+          <div class="corner corner-br"></div>
+          <img src="API_AI處理.png" alt="API 頭皮分析儀設備" loading="eager" style="object-fit:contain;background:transparent;">
+        </div>
+        <div class="floating-tag tag-1">
+          <div>AI SCANNING</div>
+          <div style="color:#00ff88;font-size:0.6rem;margin-top:2px;">● ACTIVE</div>
+        </div>
+        <div class="floating-tag tag-2">
+          <div>WiFi CONNECTED</div>
+          <div style="color:#00ff88;font-size:0.6rem;margin-top:2px;">● ONLINE</div>
+        </div>
+        <div class="floating-tag tag-3">
+          <div>200x ZOOM</div>
+          <div style="color:var(--neon-cyan);font-size:0.6rem;margin-top:2px;">◈ READY</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">CORE FEATURES</div>
+      <h2 class="section-title">四大核心 <span class="hl">競爭優勢</span></h2>
+      <p class="section-desc">專業設備，零月租，數據留在本地，安全無虞。讓您的診斷服務升級至科技新境界。</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="card-num">01</div>
+        <div class="card-icon"><iconify-icon icon="mdi:currency-usd-off"></iconify-icon></div>
+        <div class="card-title">零月租費</div>
+        <div class="card-desc">一次購入，終身使用。無需每月繳納訂閱費，設備即為您的資產，長期持有成本極低。</div>
+        <div class="card-tags">
+          <span class="tag">一次購入</span>
+          <span class="tag">長期投資</span>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.1s">
+        <div class="card-num">02</div>
+        <div class="card-icon"><iconify-icon icon="mdi:shield-lock"></iconify-icon></div>
+        <div class="card-title">資訊安全無風險</div>
+        <div class="card-desc">無需上傳雲端，所有顧客資料保存在本地設備。顧客隱私受到最嚴密的保護，零外洩風險。</div>
+        <div class="card-tags">
+          <span class="tag">本地儲存</span>
+          <span class="tag">隱私安全</span>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.2s">
+        <div class="card-num">03</div>
+        <div class="card-icon"><iconify-icon icon="mdi:wifi"></iconify-icon></div>
+        <div class="card-title">WiFi 無線傳輸</div>
+        <div class="card-desc">即時同步至手機或平板，一鍵拍照上傳，操作流暢無障礙。支援 iOS / Android 雙平台。</div>
+        <div class="card-tags">
+          <span class="tag">iOS</span>
+          <span class="tag">Android</span>
+          <span class="tag">即時同步</span>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.3s">
+        <div class="card-num">04</div>
+        <div class="card-icon"><iconify-icon icon="mdi:microscope"></iconify-icon></div>
+        <div class="card-title">3D 精密光學系統</div>
+        <div class="card-desc">60x 表面光、60x 偏振光、200x 自動變焦，多模式切換。開機即用，不需調整放大倍率。</div>
+        <div class="card-tags">
+          <span class="tag">60x</span>
+          <span class="tag">200x 自動變焦</span>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.4s">
+        <div class="card-num">05</div>
+        <div class="card-icon"><iconify-icon icon="mdi:robot-excited"></iconify-icon></div>
+        <div class="card-title">AI 智能分析報告</div>
+        <div class="card-desc">自動診斷頭皮健康度、頭髮密度、毛孔狀況，一鍵生成可列印的專業分析報告。</div>
+        <div class="card-tags">
+          <span class="tag">自動報告</span>
+          <span class="tag">可列印</span>
+        </div>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:0.5s">
+        <div class="card-num">06</div>
+        <div class="card-icon"><iconify-icon icon="mdi:certificate"></iconify-icon></div>
+        <div class="card-title">韓國原裝進口</div>
+        <div class="card-desc">ARAM HUVIS 正品認證，台灣總代理直接進口。售後服務由品牌原廠保障，品質無虞。</div>
+        <div class="card-tags">
+          <span class="tag">NCC 認證</span>
+          <span class="tag">原廠保固</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section id="specs">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">TECHNICAL SPECS</div>
+      <h2 class="section-title">精密規格 <span class="hl">一覽</span></h2>
+    </div>
+    <div class="specs-wrapper">
+      <div>
+        <div class="spec-list reveal">
+          <div class="spec-item"><span class="spec-key">鏡頭一</span><span class="spec-val">60x 表面光</span></div>
+          <div class="spec-item"><span class="spec-key">鏡頭二</span><span class="spec-val">60x 偏振光</span></div>
+          <div class="spec-item"><span class="spec-key">鏡頭三</span><span class="spec-val">200x 表面光（自動變焦）</span></div>
+          <div class="spec-item"><span class="spec-key">鏡頭四</span><span class="spec-val">200x 偏振光（自動變焦）</span></div>
+          <div class="spec-item"><span class="spec-key">連接方式</span><span class="spec-val">WiFi 無線傳輸</span></div>
+          <div class="spec-item"><span class="spec-key">兼容平台</span><span class="spec-val">手機 / 平板 iOS & Android</span></div>
+          <div class="spec-item"><span class="spec-key">月租費用</span><span class="spec-val" style="color:var(--neon-green);">NT$ 0 ／零費用</span></div>
+          <div class="spec-item"><span class="spec-key">認證</span><span class="spec-val">NCC 國家通訊傳播委員會</span></div>
+          <div class="spec-item"><span class="spec-key">原產地</span><span class="spec-val">韓國 ARAM HUVIS 原裝</span></div>
+          <div class="spec-item"><span class="spec-key">台灣總代理</span><span class="spec-val">蓓薇媞 / 林先生 0932888077</span></div>
+        </div>
+      </div>
+
+      <div class="features-right reveal">
+        <div class="benefit-row">
+          <div class="benefit-icon"><iconify-icon icon="mdi:account-group"></iconify-icon></div>
+          <div class="benefit-text">
+            <h4>顧客管理系統</h4>
+            <p>完整記錄每位顧客的檢測歷程，追蹤頭皮改善成效，提升回訪率與服務黏著度。</p>
+          </div>
+        </div>
+        <div class="benefit-row">
+          <div class="benefit-icon"><iconify-icon icon="mdi:magnify-scan"></iconify-icon></div>
+          <div class="benefit-text">
+            <h4>快速檢視模式</h4>
+            <p>即時顯示頭皮毛囊影像，清晰呈現紅腫、過敏、乾燥問題，專業顯微光學設計。</p>
+          </div>
+        </div>
+        <div class="benefit-row">
+          <div class="benefit-icon"><iconify-icon icon="mdi:chart-donut"></iconify-icon></div>
+          <div class="benefit-text">
+            <h4>六大 AI 測量模式</h4>
+            <p>落髮狀況、頭皮狀況、頭髮密度、角蛋白敏感度、頭髮粗細、毛孔狀況，全面覆蓋。</p>
+          </div>
+        </div>
+        <div class="benefit-row">
+          <div class="benefit-icon"><iconify-icon icon="mdi:printer"></iconify-icon></div>
+          <div class="benefit-text">
+            <h4>可列印專業報告</h4>
+            <p>自動生成圖文並茂的檢測報告，提升顧客信任感，成為業界最具說服力的診斷工具。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="usecases">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">USE CASES</div>
+      <h2 class="section-title">專業 <span class="hl">應用場景</span></h2>
+      <p class="section-desc">適用於美髮沙龍、醫美診所、皮膚科診所等多元專業場域。</p>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card reveal">
+        <img class="case-img" src="salon.webp" alt="美髮沙龍" loading="lazy">
+        <div class="case-overlay"></div>
+        <div class="case-badge">美髮沙龍</div>
+        <div class="case-content">
+          <div class="case-title">呈現真實畫面，建立專業信任</div>
+          <div class="case-desc">為顧客提供最專業的頭皮分析及照護建議，讓每次服務都成為升級體驗。提升客單價與顧客黏著度。</div>
+        </div>
+      </div>
+      <div class="case-card reveal" style="transition-delay:0.15s">
+        <img class="case-img" src="medical.jpg" alt="醫美護理" loading="lazy">
+        <div class="case-overlay"></div>
+        <div class="case-badge">醫美護理</div>
+        <div class="case-content">
+          <div class="case-title">專業診斷輔助工具</div>
+          <div class="case-desc">詳實記錄頭皮毛髮狀況，作為治療前後的對比依據。提升診斷精確度，強化醫美服務的說服力。</div>
+        </div>
+      </div>
+      <div class="case-card reveal" style="transition-delay:0.3s">
+        <img class="case-img" src="clinic.png" alt="皮膚科" loading="lazy">
+        <div class="case-overlay"></div>
+        <div class="case-badge">皮膚科診所</div>
+        <div class="case-content">
+          <div class="case-title">精準數據支撐臨床決策</div>
+          <div class="case-desc">AI 分析落髮狀況與頭皮健康度，提供量化數據，讓臨床診斷更具說服力與科學依據。</div>
+        </div>
+      </div>
+      <div class="case-card reveal" style="transition-delay:0.45s">
+        <img class="case-img" src="health.png" alt="健康管理" loading="lazy">
+        <div class="case-overlay"></div>
+        <div class="case-badge">健康管理中心</div>
+        <div class="case-content">
+          <div class="case-title">長期追蹤改善成效</div>
+          <div class="case-desc">定期檢測、自動存檔，視覺化呈現頭皮健康改善曲線，讓顧客看見真實成果。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-bg"></div>
+  <div class="cta-grid-lines"></div>
+  <div class="section-inner">
+    <div class="cta-content reveal">
+      <div class="cta-eyebrow">// READY TO UPGRADE?</div>
+      <h2 class="cta-title">
+        讓 AI 科技<br>
+        <span class="neon">重新定義</span><br>
+        您的頭皮診斷服務
+      </h2>
+      <p class="cta-desc">
+        零月租費、資訊安全無風險、韓國原裝品質保證。<br>
+        現在聯繫我們，獲取專屬設備展示與報價方案。
+      </p>
+      <a href="tel:0932888077" class="big-cta">
+        <span>
+          <iconify-icon icon="mdi:phone" style="font-size:1.2rem;vertical-align:middle;"></iconify-icon>
+          立即諮詢 — 0932888077
+        </span>
+      </a>
+      <div class="cta-contact">
+        <div class="contact-item">
+          <iconify-icon icon="mdi:map-marker"></iconify-icon>
+          <span>台灣總代理 · 蓓薇媞</span>
+        </div>
+        <div class="contact-item">
+          <iconify-icon icon="mdi:account-tie"></iconify-icon>
+          <span>服務人員：<a href="tel:0932888077">林先生</a></span>
+        </div>
+        <div class="contact-item">
+          <iconify-icon icon="mdi:certificate"></iconify-icon>
+          <span>ARAM HUVIS 正品認證</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">API SCALP ANALYZER</div>
+    <div class="footer-meta">© 2024 蓓薇媞 · ARAM HUVIS 台灣總代理 · 林先生 0932888077</div>
+    <div class="footer-cert">NCC 認證 ✓</div>
+  </div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function tick() {
+  rx += (mx - rx) * 0.18;
+  ry += (my - ry) * 0.18;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(tick);
+})();
+
+// ── THREE.JS PARTICLE FIELD ──
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Particles
+  const count = 2500;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const col = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * 20;
+    pos[i*3+1] = (Math.random() - 0.5) * 20;
+    pos[i*3+2] = (Math.random() - 0.5) * 15;
+    const c = Math.random();
+    if (c < 0.5) { col[i*3]=0; col[i*3+1]=0.95; col[i*3+2]=1; }
+    else if (c < 0.8) { col[i*3]=0; col[i*3+1]=0.5; col[i*3+2]=1; }
+    else { col[i*3]=0.66; col[i*3+1]=0.33; col[i*3+2]=0.97; }
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const mat = new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.75 });
+  const pts = new THREE.Points(geo, mat);
+  scene.add(pts);
+
+  // Grid lines
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x003366, transparent: true, opacity: 0.15 });
+  for (let i = -5; i <= 5; i++) {
+    const hg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-10, i*1.5, -8), new THREE.Vector3(10, i*1.5, -8)]);
+    const vg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i*2, -8, -8), new THREE.Vector3(i*2, 8, -8)]);
+    scene.add(new THREE.Line(hg, lineMat));
+    scene.add(new THREE.Line(vg, lineMat));
+  }
+
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  const clock = new THREE.Clock();
+  (function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    pts.rotation.y = t * 0.04 + mouseX * 0.3;
+    pts.rotation.x = t * 0.02 + mouseY * 0.2;
+    mat.opacity = 0.5 + Math.sin(t * 0.5) * 0.2;
+    renderer.render(scene, camera);
+  })();
+})();
+
+// ── GSAP SCROLL REVEAL ──
+gsap.registerPlugin(ScrollTrigger);
+document.querySelectorAll('.reveal').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 85%',
+    onEnter: () => el.classList.add('visible')
+  });
+});
+
+// GSAP Hero Entrance
+gsap.from('.hero-badge', { duration: 0.8, y: 20, opacity: 0, delay: 0.3 });
+gsap.from('.hero-title', { duration: 1, y: 40, opacity: 0, delay: 0.5 });
+gsap.from('.hero-subtitle', { duration: 0.8, y: 20, opacity: 0, delay: 0.8 });
+gsap.from('.hero-cta-group', { duration: 0.8, y: 20, opacity: 0, delay: 1 });
+gsap.from('.hero-stats', { duration: 0.8, y: 20, opacity: 0, delay: 1.2 });
+gsap.from('.device-frame', { duration: 1.2, x: 60, opacity: 0, delay: 0.6, ease: 'power3.out' });
+
+// ── MAGNETIC BUTTON ──
+document.querySelectorAll('.btn-primary, .big-cta').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    btn.style.transform = `translateY(-2px) translate(${dx*0.15}px, ${dy*0.15}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
+  });
+});
+
+// ── NAVBAR scroll effect ──
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 50
+    ? 'rgba(2, 5, 16, 0.95)'
+    : 'rgba(2, 5, 16, 0.7)';
+});
+</script>
+</body>
+</html>
