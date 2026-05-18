@@ -308,75 +308,109 @@ nav {
   align-items: center;
   height: 100%;
 }
+
+/* ── 流線感裝置區 ── */
 .device-frame {
   position: relative;
-  width: auto;
-  max-width: 200px;
+  width: 220px;
+  max-width: 220px;
+  animation: device-float 5s ease-in-out infinite;
 }
+@keyframes device-float {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* 大光暈底座 */
 .device-glow {
   position: absolute;
-  inset: -30px;
-  background: radial-gradient(ellipse, rgba(201,169,110,0.2) 0%, transparent 70%);
-  animation: pulse-glow 3s ease-in-out infinite;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160%;
+  height: 120px;
+  background: radial-gradient(ellipse, rgba(201,169,110,0.35) 0%, rgba(201,169,110,0.1) 40%, transparent 70%);
+  filter: blur(18px);
+  animation: pulse-glow 4s ease-in-out infinite;
+  z-index: 0;
   border-radius: 50%;
 }
-@keyframes pulse-glow {
-  0%,100%{ opacity: 0.6; transform: scale(1); }
-  50%{ opacity: 1; transform: scale(1.05); }
+/* 側面氛圍光 */
+.device-frame::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(201,169,110,0.12) 0%, transparent 65%);
+  filter: blur(12px);
+  z-index: 0;
+  pointer-events: none;
 }
+@keyframes pulse-glow {
+  0%,100%{ opacity: 0.7; }
+  50%{ opacity: 1; }
+}
+
+/* 產品圖：完全去框，純浮空 */
 .device-img {
-  width: 100%;
-  border-radius: 12px;
-  filter: drop-shadow(0 0 40px rgba(201,169,110,0.2));
   position: relative;
   z-index: 2;
-  background: rgba(5, 15, 35, 0.3);
-  padding: 1rem;
-  border: 1px solid rgba(0,245,255,0.2);
+  background: transparent;
+  border: none;
+  padding: 0;
+  filter: drop-shadow(0 30px 50px rgba(138,108,62,0.25))
+          drop-shadow(0 10px 20px rgba(138,108,62,0.15));
 }
 .device-img img {
   width: 100%;
-  max-height: 480px;
-  border-radius: 8px;
+  max-height: 460px;
   object-fit: contain;
+  border-radius: 0;
+  display: block;
 }
+
+/* 掃描線：細緻優雅 */
 .scan-line {
   position: absolute;
-  left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #c9a96e, transparent);
-  animation: scan 3s linear infinite;
+  left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.8), transparent);
+  animation: scan 4s ease-in-out infinite;
   z-index: 3;
   top: 0;
-  box-shadow: 0 0 8px #c9a96e;
+  box-shadow: 0 0 6px rgba(201,169,110,0.5);
+  opacity: 0.6;
 }
-@keyframes scan { 0%{top:0} 100%{top:100%} }
+@keyframes scan { 0%{top:5%} 100%{top:95%} }
 
-.corner {
-  position: absolute;
-  width: 20px; height: 20px;
-  z-index: 4;
-}
-.corner-tl { top: -2px; left: -2px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-.corner-tr { top: -2px; right: -2px; border-top: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
-.corner-bl { bottom: -2px; left: -2px; border-bottom: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); }
-.corner-br { bottom: -2px; right: -2px; border-bottom: 2px solid var(--neon-cyan); border-right: 2px solid var(--neon-cyan); }
+/* corner 移除（不需要科技感框線）*/
+.corner { display: none; }
 
+/* 浮動標籤：改成醫美質感小膠囊 */
 .floating-tag {
   position: absolute;
-  background: rgba(0,20,50,0.9);
-  border: 1px solid var(--neon-cyan);
-  padding: 0.5rem 0.8rem;
+  background: rgba(255,252,248,0.92);
+  border: 1px solid rgba(138,108,62,0.2);
+  border-left: 3px solid #8a6c3e;
+  padding: 0.45rem 0.85rem;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.7rem;
-  color: var(--neon-cyan);
-  backdrop-filter: blur(10px);
+  font-size: 0.65rem;
+  color: #4a3520;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(12px);
   z-index: 5;
+  box-shadow: 0 4px 16px rgba(138,108,62,0.12);
+  border-radius: 0 4px 4px 0;
   animation: float 4s ease-in-out infinite;
 }
-.tag-1 { top: 20%; right: -30px; animation-delay: 0s; }
-.tag-2 { bottom: 25%; left: -40px; animation-delay: 1.5s; }
-.tag-3 { top: 60%; right: -25px; animation-delay: 0.8s; }
+.floating-tag > div:last-child {
+  font-size: 0.58rem;
+  margin-top: 2px;
+  color: #8a6c3e;
+  font-weight: 600;
+}
+.tag-1 { top: 18%; right: -90px; animation-delay: 0s; }
+.tag-2 { bottom: 30%; left: -95px; animation-delay: 1.5s; }
+.tag-3 { top: 58%; right: -80px; animation-delay: 0.8s; }
 @keyframes float {
   0%,100%{ transform: translateY(0); }
   50%{ transform: translateY(-8px); }
@@ -1082,15 +1116,15 @@ footer {
         </div>
         <div class="floating-tag tag-1">
           <div>AI SCANNING</div>
-          <div style="color:#00ff88;font-size:0.6rem;margin-top:2px;">● ACTIVE</div>
+          <div style="color:#8a6c3e;font-size:0.6rem;margin-top:2px;">● ACTIVE</div>
         </div>
         <div class="floating-tag tag-2">
           <div>WiFi CONNECTED</div>
-          <div style="color:#00ff88;font-size:0.6rem;margin-top:2px;">● ONLINE</div>
+          <div style="color:#8a6c3e;font-size:0.6rem;margin-top:2px;">● ONLINE</div>
         </div>
         <div class="floating-tag tag-3">
           <div>200x ZOOM</div>
-          <div style="color:var(--neon-cyan);font-size:0.6rem;margin-top:2px;">◈ READY</div>
+          <div style="color:#8a6c3e;font-size:0.6rem;margin-top:2px;">◈ READY</div>
         </div>
       </div>
     </div>
